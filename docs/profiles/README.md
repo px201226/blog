@@ -15,4 +15,3 @@ Web Application, Java, Spring, System Design, Cleancode, Database
 
 <br clear="left">
 
-내용을 준비 중 입니다.

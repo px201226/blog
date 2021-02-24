@@ -3,7 +3,7 @@ var path = require('path');
 module.exports = {
   title: "DEVUP",
   description: 'Awesome description',
-  base: '/blog/',
+
   chainWebpack: (config, isServer) => {
     config.resolveLoader.modules.add(path.resolve(__dirname, './node_modules'));
   },
