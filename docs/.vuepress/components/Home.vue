@@ -1,9 +1,9 @@
 <template>
   <div v-if="postsForPage.length" class="posts">
-    <el-row class="post" v-for="post in postsForPage" :key="post.path">
-      <el-card>
-        <div slot="header" class="clearfix">
-          <router-link :to="post.path" class="post-link">
+    <v-col class="px-0" cols="12" v-for="post in postsForPage" :key="post.path">
+      <v-card class="pa-5" elevation="2">
+        <div>
+          <router-link class="text-h6 font-weight-bold" :to="post.path">
             <div>
               <img
                 v-if="post.frontmatter.image"
@@ -13,34 +13,31 @@
             </div>
             {{ post.frontmatter.title }}
             <br />
-            <span class="post-date">{{ post.frontmatter.date }}</span>
           </router-link>
+          <span class="post-date">{{ post.frontmatter.date }}</span>
         </div>
+        <v-divider class="mt-4 mb-4" />
         <div v-html="post.excerpt"></div>
         <router-link :to="post.path">Read more....</router-link>
-      </el-card>
-    </el-row>
+      </v-card>
+    </v-col>
 
     <br />
-    <el-row type="flex" class="row-bg" justify="center">
-      <el-button-group style="display: block; width: 100%;">
-        <el-button
-          type="primary"
-          icon="el-icon-arrow-left"
-          style="width: 50%; height: 48px;"
-          v-on:click="increasePageNum(-1)"
-          >이전 페이지</el-button
-        >
-        <el-button
-          type="primary"
-          style="width: 50%; height: 48px;"
-          v-on:click="increasePageNum(1)"
-        >
-          다음 페이지
-          <i class="el-icon-arrow-right el-icon-right"></i>
-        </el-button>
-      </el-button-group>
-    </el-row>
+    <v-row justify="center" class="pa-10">
+      <v-btn
+        color="primary"
+        style="width: 50%; height: 48px;"
+        v-on:click="increasePageNum(-1)"
+        >이전 페이지</v-btn
+      >
+      <v-btn
+        color="primary"
+        style="width: 50%; height: 48px;"
+        v-on:click="increasePageNum(1)"
+      >
+        다음 페이지
+      </v-btn>
+    </v-row>
   </div>
 </template>
 
@@ -60,32 +57,39 @@ export default {
         .sort((a, b) => {
           return new Date(b.frontmatter.date) - new Date(a.frontmatter.date);
         });
+
       this.postLength = posts.length;
+      this.totalPage = Math.ceil(this.postLength / this.postPerPage);
       return posts;
     },
     postsForPage() {
-      let postIndex = this.pageNum * this.postPerPage;
+      let postIndex = (this.pageNum - 1) * this.postPerPage;
       return this.posts.slice(postIndex, postIndex + this.postPerPage);
     },
   },
   methods: {
     increasePageNum(amount) {
-      this.pageNum += amount;
-      if (this.pageNum < 0) {
-        this.pageNum = 0;
-      } else if (
-        this.pageNum >= Math.round(this.postLength / this.postPerPage)
+      if (
+        this.pageNum + amount >= 1 &&
+        this.pageNum + amount <= this.totalPage
       ) {
-        this.pageNum = Math.round(this.postLength / this.postPerPage) - 1;
+        this.pageNum += amount;
       }
+
+      console.log(this.totalPage);
       console.log(this.pageNum);
     },
   },
+
   data() {
     return {
-      pageNum: 0,
-      postLength: 0,
-      postPerPage: 5,
+      totalPage: 0, // 총 페이지 갯수
+      postLength: 0, // 총 게시물 수
+      pagePerPage: 10, // 페이지 당 보여질 페이지 수
+      postPerPage: 5, // 페이지 당 게시물 수
+      pageNum: 1, // 현재 페이지 번호
+      startPage: 1,
+      endPage: 1,
     };
   },
 };

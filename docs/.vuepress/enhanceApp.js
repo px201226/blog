@@ -1,6 +1,6 @@
-// enhanceApp.js
-import elementUi from 'element-ui'
-
+import Vuetify from "vuetify";
+import "./theme/vuetify.css"
+import "./theme/prism-tomarrow.css"
 
 export default ({
   Vue, // the version of Vue being used in the VuePress app
@@ -8,6 +8,18 @@ export default ({
   router, // the router instance for the app
   siteData // site metadata
 }) => {
-    Vue.use(elementUi);
-
-}
+  Vue.use(Vuetify);
+  options.vuetify = new Vuetify({
+    theme: {
+      themes: {
+        light: {
+          primary: '#1E88E5',
+          secondary: '#b0bec5',
+          accent: '#8c9eff',
+          error: '#b71c1c',
+          background: '#1E88E5',
+        },
+      },
+    },
+})
+};

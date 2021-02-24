@@ -1,8 +1,9 @@
 var path = require('path');
 
 module.exports = {
-  title: "px201226's devlogs",
-  description: "px201226's devlogs",
+  title: "px201226' devlogs",
+  description: 'Awesome description',
+  base: '/blog/',
   chainWebpack: (config, isServer) => {
     config.resolveLoader.modules.add(path.resolve(__dirname, './node_modules'));
   },
@@ -14,4 +15,4 @@ module.exports = {
   ],
 
 
-};
+}

@@ -1,25 +1,24 @@
 <template>
   <div v-if="Object.keys(postsByCategory).length" class="posts">
-    <el-row
-      class="post"
+    <v-col
+    class="px-0"
+      cols="12"
       v-for="category in Object.keys(postsByCategory)"
       :key="category"
     >
-      <el-card>
-        <div slot="header" class="clearfix">
-          <span class="post-link">{{ category }}</span>
-          <span class="post-date"
-            >({{ postsByCategory[category].length }})</span
-          >
-        </div>
+      <v-card class="pa-5">
+        <span class="post-link">{{ category }}</span>
+        <span class="post-date">({{ postsByCategory[category].length }})</span>
+        <v-divider class="mt-4 mb-4" />
+
         <li v-for="post in postsByCategory[category]">
           <router-link :to="post.path">{{
             post.frontmatter.title
           }}</router-link>
           <span class="post-date">{{ post.frontmatter.date }}</span>
         </li>
-      </el-card>
-    </el-row>
+      </v-card>
+    </v-col>
   </div>
 </template>
 

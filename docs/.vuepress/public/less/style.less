@@ -23,31 +23,22 @@ body {
   background-color: @bg-color;
 }
 
-a {
+a:link {
   color: @link-color;
+  text-decoration: none;
+}
+a:visited {
+  color: @link-color;
+  text-decoration: none;
+}
+a:hover {
+  color: @link-color;
+  text-decoration: underline;
 }
 
 .blog-header {
   font-family: "Jura", sans-serif;
   text-align: center;
-}
-
-.blog-header > h1 {
-  font-size: @header-text-size;
-  color: @header-color;
-  font-weight: 300;
-}
-
-.el-menu {
-  margin: 0px 20px;
-}
-
-.el-menu-item {
-  text-align: center;
-}
-
-.post {
-  margin-bottom: 20px;
 }
 
 pre {
@@ -78,13 +69,17 @@ pre {
   max-width: 80%;
   border-radius: @border-radius;
   box-shadow: @shadow;
-  margin: 0 auto;
+  margin: 4% auto;
   display: block;
 }
 
 .post iframe {
-  margin: 0 auto;
+  margin: 4% auto;
   display: block;
+}
+
+.post .header-anchor {
+  margin: 10% 0;
 }
 
 .post i {

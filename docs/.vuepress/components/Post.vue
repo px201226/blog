@@ -1,8 +1,8 @@
 <template>
-  <div class="posts">
-    <el-row class="post">
-      <el-card>
-        <div slot="header" class="clearfix">
+  <div>
+    <v-col cols="12" class="px-0 post">
+      <v-card class="pa-5" elevation="2">
+        <div>
           <router-link :to="$page.path" class="post-link">
             <div>
               <img
@@ -16,15 +16,22 @@
             <span class="post-date">{{ $page.frontmatter.date }}</span>
           </router-link>
         </div>
-        <Content />
-      </el-card>
-    </el-row>
+
+        <v-divider class="mt-4 mb-4" />
+
+        <Content class="markdown-body" />
+      </v-card>
+    </v-col>
     <disqus />
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  created() {
+    console.log("Post");
+  },
+};
 </script>
 
 <style scoped></style>

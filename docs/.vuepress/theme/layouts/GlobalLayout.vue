@@ -1,58 +1,54 @@
 <template>
-  <div style="wrapper">
-    <el-container style="max-width: 900px; margin: 0px auto; main-content">
+  <v-app id="app" style="background: #ECEFF1">
+    <v-container style="max-width: 900px;" class="">
       <link
         href="https://fonts.googleapis.com/css?family=Jura"
         rel="stylesheet"
       />
-      <el-header class="blog-header" height="100px">
-        <h1>{{ $site.title }}</h1>
-      </el-header>
-
-      <el-menu
-        :router="true"
-        :default-active="activeIndex"
-        class="el-menu-demo"
-        background-color="#f9fafc"
-        type="flex"
-        justify="center"
+      <v-app-bar-title class="text-center py-8" style="font-family: 'Jura'">
+        <h1 class="primary--text">{{ $site.title }}</h1>
+      </v-app-bar-title>
+     
+      <v-list flat class="pa-0" color="transparent">
+      <v-list-item-group
+        color="indigo"
       >
-        <el-row type="flex" justify="center">
-          <el-col :xs="6" :md="4">
-            <el-menu-item index="/">메인</el-menu-item>
-          </el-col>
-          <el-col :xs="6" :md="4">
-            <el-menu-item index="/posts/">카테고리</el-menu-item>
-          </el-col>
-          <el-col :xs="6" :md="4">
-            <el-menu-item index="/profiles/">프로필</el-menu-item>
-          </el-col>
-        </el-row>
-      </el-menu>
+      <v-row class="mb-0 text-center" justify="center" no-gutters>
+        <v-col lg="2">
+          <v-list-item class="py-2 " block text color="primary" to="/">
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item>
+        </v-col>
+         <v-col lg="2">
+          <v-list-item class="py-2" block text color="primary" to="/category">
+            <v-list-item-title>Category</v-list-item-title>
+          </v-list-item>
+         </v-col>
+          <v-col lg="2">
+          <v-list-item class="py-2" block text color="primary" to="/profiles">
+            <v-list-item-title>Profiles</v-list-item-title>
+          </v-list-item>
+          </v-col>
+        </div>
+        </v-row>
+      </v-list-item-group>
+    </v-list>
+
+      <v-divider class="mb-3" />
 
       <div>
         <component :is="$page.frontmatter.layout" />
       </div>
-    </el-container>
+       </v-container>
 
-    <Footer />
-  </div>
+    <Footer class="mt-2" />
+  </v-app>
 </template>
 
 <script>
-import Vue from "vue";
-import ElementUI from "element-ui";
-import Prism from "prismjs";
-import "element-ui/lib/theme-chalk/index.css";
-import locale from "element-ui/lib/locale/lang/ko";
 import Footer from "../../components/Footer.vue";
-
-Vue.use(Prism);
-Vue.use(ElementUI, { locale });
-
 export default {
   components: { Footer },
-
   data() {
     return {};
   },
@@ -72,14 +68,11 @@ export default {
   },
 };
 </script>
-<style src="prism-themes/themes/prism-a11y-dark.css"></style>
-<style src="../../public/less/style.less" lang="less">
-</ > <style scoped > .wrapper {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-}
-.main-content {
-  flex: 1;
+
+<style src="../../public/less/style.less" lang="less"></style>
+<style src="../markdown.css"></style>
+<style >
+#app {
+  font-family: "Noto Sans KR", sans-serif;
 }
 </style>
