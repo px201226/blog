@@ -3,7 +3,7 @@ layout: post
 title: Profiles
 ---
 
-<img class="profile-image" src="/images/about_me_ilco.jpg">
+<img class="profile-image" src="/images/profiles/about_me.jpg">
 
 #### Contacts
 

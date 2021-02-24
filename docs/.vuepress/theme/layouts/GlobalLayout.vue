@@ -1,6 +1,6 @@
 <template>
-  <v-app id="app" style="background: #ECEFF1">
-    <v-container style="max-width: 900px;" class="">
+  <v-app id="app" style="background: #f0eeee" >
+    <v-container style="max-width: 900px;" class="pa-0">
       <link
         href="https://fonts.googleapis.com/css?family=Jura"
         rel="stylesheet"

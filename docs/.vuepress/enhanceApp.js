@@ -13,7 +13,7 @@ export default ({
     theme: {
       themes: {
         light: {
-          primary: '#1E88E5',
+          primary: '#2673bf',
           secondary: '#b0bec5',
           accent: '#8c9eff',
           error: '#b71c1c',

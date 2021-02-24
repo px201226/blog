@@ -1,21 +1,21 @@
 <template>
   <div v-if="Object.keys(postsByCategory).length" class="posts">
     <v-col
-    class="px-0"
+      class="px-0"
       cols="12"
       v-for="category in Object.keys(postsByCategory)"
       :key="category"
     >
-      <v-card class="pa-5">
-        <span class="post-link">{{ category }}</span>
-        <span class="post-date">({{ postsByCategory[category].length }})</span>
+      <v-card class="pa-5" elevation="1">
+        <span class="primary--text text-h6 font-weight-bold" >{{ category }}</span>
+        <span class="text-caption grey--text text--darken-1">({{ postsByCategory[category].length }})</span>
         <v-divider class="mt-4 mb-4" />
 
         <li v-for="post in postsByCategory[category]">
           <router-link :to="post.path">{{
             post.frontmatter.title
           }}</router-link>
-          <span class="post-date">{{ post.frontmatter.date }}</span>
+          <span class="text-caption grey--text text--darken-1">{{ post.frontmatter.date }}</span>
         </li>
       </v-card>
     </v-col>

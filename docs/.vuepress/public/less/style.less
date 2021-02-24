@@ -4,8 +4,8 @@
 @main-text-size: 18px;
 @header-text-size: 40px;
 @bg-color: #f9fafc;
-@header-color: #2196f3;
-@link-color: #2196f3;
+@header-color: #2673bf;
+@link-color: #2673bf;
 @inline-code-color: #e91e63;
 @code-background-color: #eee;
 @code-text-size: 14px;
@@ -46,16 +46,7 @@ pre {
   word-break: break-all;
 }
 
-.post-link {
-  text-decoration: none !important;
-  color: @link-color;
-  font-weight: 600;
-  font-size: @main-text-size + 2;
-}
 
-.post-link:hover {
-  text-decoration: none !important;
-}
 
 .post a:not(.post-link) {
   text-decoration: none !important;
@@ -74,6 +65,7 @@ pre {
 }
 
 .post iframe {
+  max-width: 100%;
   margin: 4% auto;
   display: block;
 }
@@ -101,57 +93,12 @@ p > code {
   border-radius: @border-radius;
 }
 
-.el-menu {
-  border-right: none;
-  border-bottom: solid 1px #e6e6e6;
-}
-
-.post-date {
-  font-size: @hazy-text-size;
-  color: @hazy-text-color;
-  font-weight: 300;
-}
-
-.post li {
-  list-style-type: circle;
-}
 
 @media only screen and (min-width: 768px) {
   .profile-image {
     float: right;
     max-width: 250px !important;
     margin-right: 20px !important;
-  }
-}
-
-@media only screen and (max-width: 820px) {
-  body {
-    font-size: @main-text-size * @scale-const;
-  }
-
-  pre {
-    font-size: @code-text-size * @scale-const;
-  }
-
-  p > code {
-    font-size: @code-text-size * @scale-const;
-    padding: 3px * @scale-const;
-  }
-
-  .post-link {
-    font-size: (@main-text-size + 2) * @scale-const;
-  }
-
-  .post-date {
-    font-size: @hazy-text-size * @scale-const;
-  }
-
-  .el-menu {
-    margin: 0px;
-  }
-
-  .el-main {
-    padding: 20px 0px;
   }
 }
 

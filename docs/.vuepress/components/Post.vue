@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-col cols="12" class="px-0 post">
-      <v-card class="pa-5" elevation="2">
+    <v-col cols="12" class="px-0">
+      <v-card class="pa-5" elevation="1">
         <div>
-          <router-link :to="$page.path" class="post-link">
+          <router-link class="text-h6 font-weight-bold" :to="$page.path">
             <div>
               <img
                 v-if="$page.frontmatter.image"
@@ -12,22 +12,27 @@
               />
             </div>
             {{ $page.frontmatter.title }}
-            <br />
-            <span class="post-date">{{ $page.frontmatter.date }}</span>
           </router-link>
+          <br />
+          <span class="text-caption grey--text text--darken-1">{{
+            $page.frontmatter.date
+          }}</span>
         </div>
 
         <v-divider class="mt-4 mb-4" />
 
-        <Content class="markdown-body" />
+        <Content class="markdown-body post" />
       </v-card>
     </v-col>
-    <disqus />
+    <Comment />
   </div>
 </template>
 
 <script>
+import Comment from "./Comment.vue";
 export default {
+  components: { Comment },
+
   created() {
     console.log("Post");
   },

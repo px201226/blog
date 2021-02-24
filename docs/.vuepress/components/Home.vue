@@ -1,7 +1,7 @@
 <template>
-  <div v-if="postsForPage.length" class="posts">
+  <div v-if="postsForPage.length">
     <v-col class="px-0" cols="12" v-for="post in postsForPage" :key="post.path">
-      <v-card class="pa-5" elevation="2">
+      <v-card class="pa-5 " elevation="1">
         <div>
           <router-link class="text-h6 font-weight-bold" :to="post.path">
             <div>
@@ -14,11 +14,13 @@
             {{ post.frontmatter.title }}
             <br />
           </router-link>
-          <span class="post-date">{{ post.frontmatter.date }}</span>
+          <span class="text-caption grey--text text--darken-1 ">{{
+            post.frontmatter.date
+          }}</span>
         </div>
         <v-divider class="mt-4 mb-4" />
-        <div v-html="post.excerpt"></div>
-        <router-link :to="post.path">Read more....</router-link>
+        <div class="markdown-body post mb-3" v-html="post.excerpt"></div>
+        <router-link  :to="post.path">Read more ></router-link>
       </v-card>
     </v-col>
 

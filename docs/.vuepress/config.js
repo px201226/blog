@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-  title: "px201226' devlogs",
+  title: "DEVUP",
   description: 'Awesome description',
   base: '/blog/',
   chainWebpack: (config, isServer) => {

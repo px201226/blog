@@ -1,4 +1,4 @@
 ---
 layout: postList
-title: Post List
+title: Category
 ---
