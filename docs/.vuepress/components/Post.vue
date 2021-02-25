@@ -14,9 +14,13 @@
             {{ $page.frontmatter.title }}
           </router-link>
           <br />
-          <span class="text-caption grey--text text--darken-1">{{
-            $page.frontmatter.date
-          }}</span>
+          <span
+            v-if="$page.frontmatter.category"
+
+            
+            class="text-caption grey--text text--darken-1 "
+            >{{ $page.frontmatter.date }} > {{ $page.frontmatter.category }}
+          </span>
         </div>
 
         <v-divider class="mt-4 mb-4" />

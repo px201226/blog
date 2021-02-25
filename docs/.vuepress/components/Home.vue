@@ -16,28 +16,25 @@
           </router-link>
           <span class="text-caption grey--text text--darken-1 ">{{
             post.frontmatter.date
-          }}</span>
+          }} > {{post.frontmatter.category}} </span>
         </div>
         <v-divider class="mt-4 mb-4" />
         <div class="markdown-body post mb-3" v-html="post.excerpt"></div>
-        <router-link  :to="post.path">Read more ></router-link>
+        <router-link :to="post.path">Read more ></router-link>
       </v-card>
     </v-col>
 
     <br />
-    <v-row justify="center" class="pa-10">
+    <v-row justify="center" class="py-5 px-15 ">
       <v-btn
-        color="primary"
-        style="width: 50%; height: 48px;"
-        v-on:click="increasePageNum(-1)"
-        >이전 페이지</v-btn
-      >
-      <v-btn
-        color="primary"
-        style="width: 50%; height: 48px;"
+        v-if="isNotEndPage"
+        elevation="1"
+        block
+        rounded
+        color="white"
+        class="grey--text text--darken-1"
         v-on:click="increasePageNum(1)"
-      >
-        다음 페이지
+        >↓    더 보기
       </v-btn>
     </v-row>
   </div>
@@ -68,6 +65,10 @@ export default {
       let postIndex = (this.pageNum - 1) * this.postPerPage;
       return this.posts.slice(postIndex, postIndex + this.postPerPage);
     },
+
+    isNotEndPage() {
+      return this.postPerPage <= this.postLength;
+    },
   },
   methods: {
     increasePageNum(amount) {
@@ -75,11 +76,9 @@ export default {
         this.pageNum + amount >= 1 &&
         this.pageNum + amount <= this.totalPage
       ) {
-        this.pageNum += amount;
+        //this.pageNum += amount;
+        this.postPerPage += 5;
       }
-
-      console.log(this.totalPage);
-      console.log(this.pageNum);
     },
   },
 
