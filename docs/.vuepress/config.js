@@ -23,7 +23,8 @@ module.exports = {
       '@vuepress/google-analytics',
       {
         'ga': 'G-SE0BLFFFMG'
-      }
-    ]
+      },
+    ],
+    ["sitemap", { hostname: "https://px201226.github.io/" }]
   ]
 }
