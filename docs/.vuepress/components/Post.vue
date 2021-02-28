@@ -16,16 +16,16 @@
           <br />
           <span
             v-if="$page.frontmatter.category"
-
-            
             class="text-caption grey--text text--darken-1 "
             >{{ $page.frontmatter.date }} > {{ $page.frontmatter.category }}
           </span>
         </div>
 
         <v-divider class="mt-4 mb-4" />
-
-        <Content class="markdown-body post" />
+        <div class="theme-container">
+          <!--   <Content class="theme-default-content custom" /> -->
+          <Content class="theme-default-content custom markdown-body" />
+        </div>
       </v-card>
     </v-col>
     <Comment />

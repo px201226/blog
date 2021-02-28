@@ -15,10 +15,11 @@
 @hazy-text-size: 14px;
 @scale-const: 0.9;
 
+
 body {
   font-family: "Noto Sans KR", sans-serif;
-  font-weight: 300;
-  font-size: @main-text-size;
+ // font-weight: 300;
+ // font-size: @main-text-size;
   color: @main-text-color;
   background-color: @bg-color;
 }
@@ -36,26 +37,6 @@ a:hover {
   text-decoration: underline;
 }
 
-.blog-header {
-  font-family: "Jura", sans-serif;
-  text-align: center;
-}
-
-pre {
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-
-
-
-.post a:not(.post-link) {
-  text-decoration: none !important;
-}
-
-.post a:not(.post-link):hover {
-  text-decoration: underline !important;
-}
-
 .post img {
   max-width: 80%;
   border-radius: @border-radius;
@@ -70,47 +51,10 @@ pre {
   display: block;
 }
 
-.post .header-anchor {
-  margin: 10% 0;
-}
-
-.post i {
-  color: @hazy-text-color;
-}
-
-pre {
-  background-color: @code-background-color;
-  font-size: @code-text-size;
-  border-radius: @border-radius;
-  box-shadow: @shadow;
-}
-
-p > code {
-  background-color: @code-background-color;
-  color: @inline-code-color;
-  font-size: @code-text-size;
-  padding: 3px;
-  border-radius: @border-radius;
-}
-
-
 @media only screen and (min-width: 768px) {
   .profile-image {
     float: right;
     max-width: 250px !important;
     margin-right: 20px !important;
   }
-}
-
-hr {
-  border: solid 1px #e6e6e6;
-}
-
-blockquote {
-  border-left: 6px ridge @inline-code-color;
-  padding-left: 10px;
-  font-weight: 500;
-  color: @hazy-text-color;
-  margin: 0px;
-  background-color: @code-background-color;
 }
