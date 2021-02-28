@@ -63,7 +63,7 @@ export default {
       dataLayer.push(arguments);
     }
     gtag("js", new Date());
-    gtag("config", "UA-139141353-1");
+     gtag('config', 'G-SE0BLFFFMG');
   },
 };
 </script>

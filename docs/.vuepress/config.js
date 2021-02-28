@@ -3,12 +3,6 @@ var path = require('path');
 module.exports = {
   title: "DEVUP",
   description: 'Awesome description',
-  themeConfig: {
-    navbar: false,
-    sidebar: false,
-    search: false,
-
-  },
 
   chainWebpack: (config, isServer) => {
     config.resolveLoader.modules.add(path.resolve(__dirname, './node_modules'));
@@ -16,11 +10,20 @@ module.exports = {
   head: [
     [
       'script',
-      { src: 'https://www.googletagmanager.com/gtag/js?id=UA-139141353-1' }
+      { src: 'https://www.googletagmanager.com/gtag/js?id=G-SE0BLFFFMG' }
     ]
   ],
 
   markdown: {
     lineNumbers: true
-  }
+  },
+
+  plugins: [
+    [
+      '@vuepress/google-analytics',
+      {
+        'ga': 'G-SE0BLFFFMG'
+      }
+    ]
+  ]
 }
