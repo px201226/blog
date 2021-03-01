@@ -19,7 +19,7 @@
           }} > {{post.frontmatter.category}} </span>
         </div>
         <v-divider class="mt-4 mb-4" />
-        <div class="markdown-body post mb-3" v-html="post.excerpt"></div>
+        <div class="theme-default-content custom post markdown-body mb-3" v-html="post.excerpt"></div>
         <router-link :to="post.path">Read more ></router-link>
       </v-card>
     </v-col>

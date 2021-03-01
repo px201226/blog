@@ -24,7 +24,7 @@
         <v-divider class="mt-4 mb-4" />
         <div class="theme-container">
           <!--   <Content class="theme-default-content custom" /> -->
-          <Content class="theme-default-content custom markdown-body" />
+          <Content class="theme-default-content custom post markdown-body" />
         </div>
       </v-card>
     </v-col>
