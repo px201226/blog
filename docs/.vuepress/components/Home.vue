@@ -1,7 +1,7 @@
 <template>
   <div v-if="postsForPage.length">
     <v-col class="px-0" cols="12" v-for="post in postsForPage" :key="post.path">
-      <v-card class="pa-5 " elevation="1">
+      <v-card class="pa-5 px-7 " elevation="1">
         <div>
           <router-link class="text-h6 font-weight-bold" :to="post.path">
             <div>
@@ -20,7 +20,7 @@
         </div>
         <v-divider class="mt-4 mb-4" />
         <div class="theme-default-content custom post markdown-body mb-3" v-html="post.excerpt"></div>
-        <router-link :to="post.path">Read more ></router-link>
+        <router-link :to="post.path" class="font-weight-bold">Read more ></router-link>
       </v-card>
     </v-col>
 
