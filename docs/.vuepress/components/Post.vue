@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-col cols="12" class="px-0">
-      <v-card class="pa-5 px-7" elevation="1">
+      <v-card class="pa-5 px-md-7" elevation="1">
         <div>
           <router-link class="text-h6 font-weight-bold" :to="$page.path">
             <div>

@@ -1,7 +1,7 @@
 <template>
   <div v-if="postsForPage.length">
     <v-col class="px-0" cols="12" v-for="post in postsForPage" :key="post.path">
-      <v-card class="pa-5 px-7 " elevation="1">
+      <v-card class="pa-5 px-md-7 " elevation="1">
         <div>
           <router-link class="text-h6 font-weight-bold" :to="post.path">
             <div>

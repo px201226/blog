@@ -6,7 +6,7 @@
       v-for="category in Object.keys(postsByCategory)"
       :key="category"
     >
-      <v-card class="pa-5 px-7" elevation="1">
+      <v-card class="pa-5 px-md-7" elevation="1">
         <span class="primary--text text-h6 font-weight-bold" >{{ category }}</span>
         <span class="text-caption grey--text text--darken-1">({{ postsByCategory[category].length }})</span>
         <v-divider class="mt-4 mb-4" />
