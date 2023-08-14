@@ -1,0 +1,57 @@
+@import url("//fonts.googleapis.com/earlyaccess/notosanskr.css");
+
+@main-text-color: #000000;
+@main-text-size: 18px;
+@header-text-size: 40px;
+@bg-color: #ab2626;
+@header-color: #2673bf;
+@link-color: #2673bf;
+@inline-code-color: #e91e63;
+@code-background-color: #eee;
+@code-text-size: 14px;
+@border-radius: 10px;
+@hazy-text-color: #888;
+@hazy-text-size: 14px;
+@scale-const: 0.9;
+
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: @main-text-size;
+  color: @main-text-color;
+  background-color: @bg-color;
+}
+
+a:link {
+  color: @link-color;
+  text-decoration: none;
+}
+a:visited {
+  color: @link-color;
+  text-decoration: none;
+}
+a:hover {
+  color: @link-color;
+  text-decoration: underline;
+}
+
+.post img {
+  max-width: 80%;
+  border-radius: @border-radius;
+  margin: 4% auto;
+  display: block;
+}
+
+.post iframe {
+  max-width: 100%;
+  margin: 4% auto;
+  display: block;
+}
+
+@media only screen and (min-width: 768px) {
+  .profile-image {
+    float: right;
+    max-width: 250px !important;
+    margin-right: 20px !important;
+  }
+}
