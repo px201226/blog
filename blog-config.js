@@ -1,17 +1,14 @@
 module.exports = {
-  title: "hoodie",
-  description: "Hello :) I'm Hudi who developed gatsby-starter-hoodie theme.",
-  author: "Hudi",
-  siteUrl: "https://devhudi.github.io/gatsby-starter-hoodie/",
+  title: "@Soo",
+  description: "RDBMS, NoSQL, 분산 처리에 관심이 많은 백엔드 엔지니어입니다.",
+  author: "Soo",
+  siteUrl: "https://px201226.github.io/",
   links: {
-    github: "https://github.com/devHudi",
-    linkedIn: "https://linkedin.com",
-    facebook: "https://www.facebook.com",
-    instagram: "https://www.instagram.com",
-    email: "mailto:devhudi@gmail.com",
+    github: "https://github.com/px201226",
+    email: "px201226@gmail.com",
   },
   utterances: {
-    repo: "devHudi/gatsby-starter-hoodie",
+    repo: "px201226/px201226.github.io",
     type: "pathname",
   },
 }

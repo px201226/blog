@@ -1,0 +1,73 @@
+[//]: # (---)
+
+[//]: # (layout: post)
+
+[//]: # (title: "Spring Transaction 제대로 이해하기")
+
+[//]: # (tags:
+ - 스프링)
+
+[//]: # (lang: ko-KR)
+
+[//]: # (date: "2023-07-16")
+
+[//]: # (---)
+
+
+## Spring 의 트랜잭션 추상화
+스프링이 제공하는 트랜잭션 서비스는 트랜잭션 추상화와 트랜잭션 동기화 두 가지로 볼 수 있다.
+스프링은 데이터 엑세스 기술과 트랜잭션 서비스 사이의 종속성을 제거하고 스프링이 제공하는 트랜잭션 추상 계층을 이용해서
+트랜잭션 기능을 활용할 수 있다.   
+트른잭션 동기화는 트랜잭션을 일정 범위 안에서 유지해주고, 어디서든 자유롭게 접근할 수 있게 해준다.
+
+
+## PlatformTransactionManager
+스프링 트랜잭션 추상화의 핵심 인터페이스는 PlatformTransactionManager 이다.
+
+```JAVA
+public interface PlatformTransactionManager extends TransactionManager {
+
+	TransactionStatus getTransaction(@Nullable TransactionDefinition definition)
+			throws TransactionException;
+	
+	void commit(TransactionStatus status) throws TransactionException;
+
+	void rollback(TransactionStatus status) throws TransactionException;
+
+}
+```
+PlatformTransactionManager 인터페이스를 구현한 다양한 구현체들이 존재한다. 
+- AbstractPlatformTransactionManager
+- CallbackPreferringPlatformTransactionManager
+- CciLocalTransactionManager
+- ChainedTransactionManager
+- DataSourceTransactionManager
+- HibernateTransactionManager
+- JdbcTransactionManager
+- JpaTransactionManager
+- JtaTransactionManager
+- RedissonTransactionManager
+- ResourceTransactionManager
+- WebLogicJtaTransactionManager
+- WebSphereUowTransactionManager
+
+PlatformTransactionManager는 트랜잭션이 어디서 시작하고 종료하는지 경계를 지정하는 데 사용한다.
+getTransaction()은 트랜잭션 속성에 따라 새로 시작하거나 진행 중인 트랜잭션에 참여하거나, 진행 중인 트랜잭션을 무시하고
+새로운 트랜잭션을 만드는 식으로 상황에 따라 동작한다.   
+TransactionDefinition은 트랜잭션의 전파속성이나 고립성 레벨을 나타내는 인터페이스다.
+TransactionStatus은 현재 참여하고 있는 트랜잭션의 ID와 구분정보를 담고 있다.
+
+## 트랜잭션 매니저의 주요 구현체 종류
+
+### DataSourceTransactionManager
+Connection의 트랜잭션 API를 이용해서 트랜잭션을 관리해주는 트랜잭션 매니저다.   
+JDBC API으로 만든 DAO 사용하는 DataSource 와 DataSourceTransactionManager 에서 사용하는 DataSource가 같아야만 사용할 수 있다.
+항상 새로운 connection을 이용하고, 단일 JDBC DataSource를 사용한다. 여러 개의 DB 리소스에 대한 트랜잭션들을 하나의 트랜잭션으로 묶어서 처리하고 싶을때는 사용하지 못한다.
+
+
+### JpaTransactionManager
+JPA를 이용하는 DAO에서 사용한다. JpaTransactionManager는 LocalContainerEntityManagerFactoryBean 타입의 프로버티를 등록해줘야한다.
+
+### HibernateTransactionManager
+하이버네이트 DAO에서 사용한다. SessionFactory 타입의 빈을 프로퍼티로 주입해야 한다.
+
