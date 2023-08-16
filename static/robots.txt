@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://px201226.github.io/sitemap.xml
