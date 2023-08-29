@@ -208,21 +208,24 @@ public class UserCollection {
 		this.users = users;
 	}
 
-	public List<User> upsertFromDtos(List<UserDto> dtos) {
+	public UpsertResult upsertFromDtos(List<UserDto> dtos) {
 		Map<Long, User> userMap = users.stream()
 				.collect(Collectors.toMap(User::getId, Function.identity()));
 
-		List<User> upsertedUsers = new ArrayList<>();
+      List<User> updatedUsers = new ArrayList<>();
+      List<User> insertedUsers = new ArrayList<>();
+			
 		for (UserDto dto : dtos) {
 			User user = userMap.get(dto.getId());
 			if (user != null) {
 				user.updateFromDto(dto);
+                updatedUsers.add(user);
 			} else {
 				user = new User(dto);
+                insertedUsers.add(user);
 			}
-			upsertedUsers.add(user);
 		}
-		return upsertedUsers;
+		return new UpsertResult(updatedUsers, insertedUsers);
 	}
 }
 
