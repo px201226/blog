@@ -1,3 +1,14 @@
+---
+layout: post
+title: "웹 서버를 위한 동시성 프로그래밍 모델"
+tags:
+  - Java
+lang: ko-KR
+date: 2023-09-07
+update: 2023-09-07
+---
+
+
 
 ## 동시성 프로그래밍 모델
 동시성은 여러 태스크가 동시에 실행된다는 시스템 속성이다. 또한 태스크들 사이에서 상호 작용을 수행할 수 있다.
@@ -113,9 +124,97 @@ wiki 에서는 atomic operation을 다음과 같이 정의하고 있다.
 
 스레드 기반 동시성 모델의 또 다른 단점은 Context-Switching 오버헤드이다.
 CPU가 한 스레드 실행에서 다른 스레드 실행으로 전환할 때 CPU는 현재 스레드의 로컬 데이터, 프로그램 포인터 등을 저장하고 실행할 다음 스레드의 로컬 데이터, 프로그램 포인터 등을 로드해야 한다.
-이 비용은 결코 저렴하지 않다. CPU 직얍적인 작업은 컨텍스트 스위칭에 대부분의 시간을 허비할 수도 있다.
+이 비용은 결코 저렴하지 않다. 불필요한 컨텍스트 스위칭으로 많은 시간을 허비할 수도 있다.
 
 ## Event-driven Concurrency
+Event-driven Concurrency은 이벤트에 응답하여 동시에 여러 작업을 수행하는 프로그래밍 방식을 의미한다.
+이는 전통적인 스레드 기반의 동시성과는 다르게 동작하는데, 스레드 기반 동시성은 여러 스레드가 동시에 실행되는 반면,
+Event-driven Concurrency은 일반적으로 한 스레드 내에서 여러 작업을 비동기적으로 수행된다.
+따라서 스레드 관리, 동기화 문제, 데드락 등의 복잡한 동시성 문제에서 자유롭다.
+
+대신, 스레드 기반 동시성에 비해 실행 흐름을 파악하기 어렵고 콜백 지옥 같은 문제로 코드 복잡성이 증가할 수 있다.
+CPU 집약적인 작업(이미지 처리, 동영상 처리) 등 에는 적합하지 않을 수 있다. 한 작업이 너무 오래 걸리면 다른 이벤트 처리가 지연될 수 있기 때문이다.
+
+이러한 패러다임은 Node.js, Vert.x 등의 프레임워크에서 사용된다.
+
+```JAVA
+interface EventHandler {
+    void handle(SelectionKey key) throws IOException;
+}
+
+public class ReactorEventLoopExample {
+    public static void main(String[] args) throws IOException {
+        Selector selector = Selector.open();
+        ServerSocketChannel serverChannel = ServerSocketChannel.open();
+        serverChannel.configureBlocking(false);
+        serverChannel.socket().bind(new InetSocketAddress(8080));
+        SelectionKey key = serverChannel.register(selector, SelectionKey.OP_ACCEPT);
+        key.attach(new AcceptHandler(selector, serverChannel));
+
+        while (true) {
+            int readyChannels = selector.select();
+            if (readyChannels == 0) continue;
+            Set<SelectionKey> selectedKeys = selector.selectedKeys();
+            Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
+            while (keyIterator.hasNext()) {
+                SelectionKey selectionKey = keyIterator.next();
+                EventHandler handler = (EventHandler) selectionKey.attachment();
+                if (handler != null) {
+                    handler.handle(selectionKey);
+                }
+                keyIterator.remove();
+            }
+        }
+    }
+}
+
+class AcceptHandler implements EventHandler {
+    private final Selector selector;
+    private final ServerSocketChannel serverSocketChannel;
+    private int counter = 0;  // 카운터 추가
+
+    public AcceptHandler(Selector selector, ServerSocketChannel serverSocketChannel) {
+        this.selector = selector;
+        this.serverSocketChannel = serverSocketChannel;
+    }
+
+    @Override
+    public void handle(SelectionKey key) throws IOException {
+        SocketChannel clientChannel = serverSocketChannel.accept();
+        if (clientChannel != null) {
+            counter++;  // 클라이언트가 연결될 때마다 카운터 증가
+            System.out.println("Client accepted. Current connection count: " + counter);
+            clientChannel.configureBlocking(false);
+            SelectionKey clientKey = clientChannel.register(selector, SelectionKey.OP_READ);
+            clientKey.attach(new ReadHandler(clientChannel));
+        }
+    }
+}
+
+class ReadHandler implements EventHandler {
+    private final SocketChannel socketChannel;
+
+    public ReadHandler(SocketChannel socketChannel) {
+        this.socketChannel = socketChannel;
+    }
+
+    @Override
+    public void handle(SelectionKey key) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(256);
+        int read = socketChannel.read(buffer);
+
+        if (read > 0) {
+            String output = new String(buffer.array()).trim();
+            System.out.println("Received: " + output);
+        } else if (read == -1) {
+            socketChannel.close();
+        }
+    }
+}
+```
+위의 예제는 싱글 스레드를 사용한 이벤트 루프 방식의 간단한 서버이다. 싱글 스레드로 동작하기 때문에 counter 값을 동기화하기 위한 스레드 조정이 필요없다.
+싱글 스레드를 사용하기 때문에 Race condition이 발생하지 않고 context switching 오버헤드도 발생하지 않는다.
+이벤트 루프 내 Blocking I/O 작업이 발생하면 이벤트 루프가 블록킹 상태로 유지되기 때문에 이러한 작업은 별도의 백그라운드 스레드에서 처리해야 동시성을 높일 수 있다.
 
 
 ## Actor-based Concurrency 
