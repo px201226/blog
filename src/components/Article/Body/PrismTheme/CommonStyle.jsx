@@ -7,7 +7,7 @@ const CommonStyle = css`
     font-size: 13.5px;
     color: #ccc;
     background: none;
-    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospacep;
     text-align: left;
     white-space: pre;
     word-spacing: normal;

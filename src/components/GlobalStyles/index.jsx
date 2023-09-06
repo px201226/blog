@@ -5,7 +5,7 @@ const GlobalStyles = createGlobalStyle`
   ${reset}
 
   body {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Open sans', -apple-system;
     background: ${props => props.theme.colors.bodyBackground};
   }
 

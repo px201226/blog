@@ -194,7 +194,7 @@ const StyledMarkdown = styled.div`
 
   & code[class*="language-"],
   & pre[class*="language-"] {
-    font-size: 13.5px;
+    font-size: 16px;
   }
 
   & img {

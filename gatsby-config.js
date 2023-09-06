@@ -30,6 +30,7 @@ module.exports = {
       resolve: `gatsby-plugin-google-fonts`,
       options: {
         fonts: [
+          'SFMono-Regular',
           `noto sans kr:300,400,500,700,900`,
           `source code pro:700`, // you can also specify font weights and styles
         ],
