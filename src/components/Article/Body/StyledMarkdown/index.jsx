@@ -226,6 +226,13 @@ const StyledMarkdown = styled.div`
     background-color: ${props => props.theme.colors.text};
     color: ${props => props.theme.colors.hoveredLinkText};
   }
+
+  @media (max-width: 480px){
+    & code[class*="language-"],
+    & pre[class*="language-"] {
+      font-size: 90%;
+    }
+  }
 `
 
 export default StyledMarkdown
