@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Java의 동시성 프로그래밍"
+title: "Java의 동시성 프로그래밍 - overview"
 tags:
   - Java
 lang: ko-KR
@@ -125,26 +125,26 @@ public class StockInventory {
 ### ReadLock vs ReadLock
 
 ```JAVA
-    @Test
-    void readLock() throws InterruptedException {
-        final StockInventory stockInventory = new StockInventory();
+@Test
+void readLock() throws InterruptedException {
+    final StockInventory stockInventory = new StockInventory();
 
-        new Thread(
-                () -> {
-                    final var qty = stockInventory.getStock("aaa");
-                    System.out.println(qty);
-                }
-        ).start();
+    new Thread(
+            () -> {
+                final var qty = stockInventory.getStock("aaa");
+                System.out.println(qty);
+            }
+    ).start();
 
-        new Thread(
-                () -> {
-                    final var qty = stockInventory.getStock("aaa");
-                    System.out.println(qty);
-                }
-        ).start();
+    new Thread(
+            () -> {
+                final var qty = stockInventory.getStock("aaa");
+                System.out.println(qty);
+            }
+    ).start();
 
-        Thread.sleep(5000L);
-    }
+    Thread.sleep(5000L);
+}
 ```
 ```console
 15:40:09.316 [Thread-0] INFO com.example.javaconcurrency.lib.StockInventory -- readLock lock
@@ -161,28 +161,28 @@ public class StockInventory {
 ### WriteLock vs WriteLock
 
 ```JAVA
-    @Test
-    void writeLock() {
-        final StockInventory stockInventory = new StockInventory();
+@Test
+void writeLock() {
+    final StockInventory stockInventory = new StockInventory();
 
-        new Thread(
-                () -> {
-                    stockInventory.increaseStock("aaa");
-                }
-        ).start();
+    new Thread(
+            () -> {
+                stockInventory.increaseStock("aaa");
+            }
+    ).start();
 
-        new Thread(
-                () -> {
-                    stockInventory.increaseStock("aaa");
-                }
-        ).start();
+    new Thread(
+            () -> {
+                stockInventory.increaseStock("aaa");
+            }
+    ).start();
 
-        try {
-            Thread.sleep(3000L);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    try {
+        Thread.sleep(3000L);
+    } catch (InterruptedException e) {
+        throw new RuntimeException(e);
     }
+}
 ```
 
 ```console
@@ -196,25 +196,25 @@ public class StockInventory {
 
 ### WriteLock vs ReadLock
 ```JAVA
-    @Test
-    void writeLockVsReadLock() throws InterruptedException {
-        final StockInventory stockInventory = new StockInventory();
+@Test
+void writeLockVsReadLock() throws InterruptedException {
+    final StockInventory stockInventory = new StockInventory();
 
-        new Thread(
-                () -> {
-                    stockInventory.increaseStock("aaa");
-                }
-        ).start();
+    new Thread(
+            () -> {
+                stockInventory.increaseStock("aaa");
+            }
+    ).start();
 
-        new Thread(
-                () -> {
-                    final var qty = stockInventory.getStock("aaa");
-                    System.out.println(qty);
-                }
-        ).start();
+    new Thread(
+            () -> {
+                final var qty = stockInventory.getStock("aaa");
+                System.out.println(qty);
+            }
+    ).start();
 
-        Thread.sleep(3000L);
-    }
+    Thread.sleep(3000L);
+}
 ```
 
 ```Console
@@ -333,30 +333,30 @@ class ConnectionPoolTest {
 semaphore fair = true 시, 리소스에 락을 획득하려고 하는 스레드가 많을 때 할당되는 방식이다.
 ```JAVA
 
-	@Test
-	void semaphore_wait_Test() throws InterruptedException {
-		final var connectionPool = new ConnectionPool(1);
+@Test
+void semaphore_wait_Test() throws InterruptedException {
+    final var connectionPool = new ConnectionPool(1);
 
-		final var executorService = Executors.newFixedThreadPool(5);
+    final var executorService = Executors.newFixedThreadPool(5);
 
-		for (int i=0; i<10; i++){
-			executorService.execute(() -> {
-				try {
-					final var connection = connectionPool.acquireConnection();
-					log.info("connection acquired = {}", connection);
-					Thread.sleep(2000L);
-					connectionPool.releaseConnection(connection);
-				} catch (InterruptedException e) {
-					throw new RuntimeException(e);
-				}
-			});
+    for (int i=0; i<10; i++){
+        executorService.execute(() -> {
+            try {
+                final var connection = connectionPool.acquireConnection();
+                log.info("connection acquired = {}", connection);
+                Thread.sleep(2000L);
+                connectionPool.releaseConnection(connection);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
-		}
+    }
 
 
-		Thread.sleep(15000L);
+    Thread.sleep(15000L);
 
-	}
+}
 ```
 
 ```Console
@@ -421,20 +421,20 @@ public class LatchExample implements Runnable {
 }
 ```
 ```JAVA
-	@Test
-	void latch_test() throws InterruptedException {
-		final var countDownLatch = new CountDownLatch(5);
+@Test
+void latch_test() throws InterruptedException {
+    final var countDownLatch = new CountDownLatch(5);
 
-		final var pool = Executors.newFixedThreadPool(5);
-		for (int i=0; i<5; i++){
-			pool.execute(new LatchExample(countDownLatch));
-		}
+    final var pool = Executors.newFixedThreadPool(5);
+    for (int i=0; i<5; i++){
+        pool.execute(new LatchExample(countDownLatch));
+    }
 
-		log.info("await on main");
-		countDownLatch.await();
-		log.info("done on main");
-		Thread.sleep(5000L);
-	}
+    log.info("await on main");
+    countDownLatch.await();
+    log.info("done on main");
+    Thread.sleep(5000L);
+}
 ```
 
 ```CONSOLE
