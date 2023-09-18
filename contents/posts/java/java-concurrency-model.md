@@ -6,6 +6,7 @@ tags:
 lang: ko-KR
 date: 2023-09-07
 update: 2023-09-07
+series: "Java의 동시성 프로그래밍"
 ---
 
 

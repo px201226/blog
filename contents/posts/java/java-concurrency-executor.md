@@ -1,11 +1,12 @@
 ---
 layout: post
-title: "Java의 동시성 프로그래밍 - executor"
+title: "Java의 동시성 프로그래밍 - Executor"
 tags:
   - Java
 lang: ko-KR
 date: 2023-09-17
 update: 2023-09-17
+series: "Java의 동시성 프로그래밍"
 ---
 
 ## Executor
