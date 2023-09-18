@@ -1,4 +1,100 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of @Soo]]></title><description><![CDATA[RDBMS, NoSQL, 분산 처리에 관심이 많은 백엔드 엔지니어입니다.]]></description><link>https://px201226.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 18 Sep 2023 14:47:51 GMT</lastBuildDate><item><title><![CDATA[Java의 동시성 프로그래밍 - Deadlock]]></title><description><![CDATA[DeadLock 스레드 A각 잠금 L을 점유하고 있고 잠금 M을 획득하려고 시도하는 동시에 스레드 B가 잠금 M을 보유하고 있고 잠금 L을 획득하려고 시도하면 두 스레드는 영원히 대기하게 된다. 이러한 상황을 데드락이라고 한다. lock…]]></description><link>https://px201226.github.io/java-concurrency-deadlock/</link><guid isPermaLink="false">https://px201226.github.io/java-concurrency-deadlock/</guid><pubDate>Sun, 17 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;DeadLock&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of @Soo]]></title><description><![CDATA[RDBMS, NoSQL, 분산 처리에 관심이 많은 백엔드 엔지니어입니다.]]></description><link>https://px201226.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 18 Sep 2023 15:33:40 GMT</lastBuildDate><item><title><![CDATA[Java의 동시성 프로그래밍 - Executor]]></title><description><![CDATA[Executor Task는 논리적인 작업 단위이며, 스레드는 Task를 비동기적으로 실행할 수 있는 기술이다. Java에서는 Task 실행을 추상화하여 Executor 라는 인터페이스를 제공한다. Executor는 다양한 Task…]]></description><link>https://px201226.github.io/java-concurrency-executor/</link><guid isPermaLink="false">https://px201226.github.io/java-concurrency-executor/</guid><pubDate>Sun, 17 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Executor&lt;/h2&gt;
+&lt;p&gt;Task는 논리적인 작업 단위이며, 스레드는 Task를 비동기적으로 실행할 수 있는 기술이다. Java에서는 Task 실행을 추상화하여 Executor 라는 인터페이스를 제공한다. Executor는 다양한 Task 실행 정책을 지원하는 비동기 프레임워크에 기반이 된다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Executor&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Runnable&lt;/span&gt; command&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Executor 구현은 통계 수집, 애플리케이션 관리 및 모니터링을 추가하기 위한 라이프사이클 지원 및 후크를 제공한다.
+Executor는 생산자-소비자 패턴을 기반으로 Task을 등록하는 작업과 Task를 처리하는 작업을 분리하였다.
+Task의 등록과 처리를 분리는 특정 Task의 실행 정책을 쉽게 변경할 수 있다는 장점이 있다.
+실행 정책은 무엇을, 어디서, 언제, 어떻게를 포함한다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Task는 어떤 스레드에서 실행되는가?&lt;/li&gt;
+&lt;li&gt;Task는 어떤 순서로 실행되어야 하는가? (FIFO, LIFO, Priority)&lt;/li&gt;
+&lt;li&gt;동시에 실행할 수 있는 작업 수는?&lt;/li&gt;
+&lt;li&gt;몇 개의 작업이 실행 대기열에 포함될 수 있나?&lt;/li&gt;
+&lt;li&gt;처리량 제한으로 작업을 거부해야하는 경우, 어떻게 처리해야 하나?&lt;/li&gt;
+&lt;li&gt;작업을 실행하기 전후 조치는?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;현재 new Thread(runnable).start() 와 같은 저수준의 스레드를 직접 다루고 있다면 Executor 나 비동기 프레임워크 사용을 적극적으로 고려해보는 것이 좋다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Executor 라이프사이클&lt;/h2&gt;
+&lt;p&gt;Executor는 Task를 비동기적으로 처리하기 때문에 특정 시점에 제출된 작업의 상태를 즉시 알 수 없다.
+완료되거나 실행 중이거나 실행대기 중일 수 도 있다. Executor는 애플리케이션이 정상적으로 또는 갑작스럽게 종료되더라도 종료로 인한 영향받는 작업의 상태 정보를 애플리케이션에 전달할 수 있어야 한다.
+Executor의 수명 주기 문제를 해결하기 위해 ExecutorService 인터페이스는 Executor를 확장하여 라이프 사이클 관리를 위한 여러 가지 메서드를 제공한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ExecutorService&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Executor&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;shutdown&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Runnable&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;shutdownNow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;token keyword&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;isShutdown&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;token keyword&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;isTerminated&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+	&lt;span class=&quot;token keyword&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;awaitTermination&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;long&lt;/span&gt; timeout&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;TimeUnit&lt;/span&gt; unit&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;InterruptedException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;token comment&quot;&gt;//...&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ExecutorService , ExecutorCompletionService 차이
+ExecutorService 는 Task를 제출한 순서대로 결과를 가져와서 처리할 수 있다.
+ExecutorCompletionService 는 Task를 제출한 순서와 상관없이 내부적으로 BlockingQueue 사용하여 완료된 작업 목록 리스트를 유지하여 완료된 Task를 poll 하거나 take할 수 있다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;ThreadPoolExecutor&lt;/h2&gt;
+&lt;p&gt;ThreadPoolExecutor 는 Executors의 정적 팩토리 메서드로 생성할 수 있는 newCachedThreadPool, newFixedThreadPool, newScheduledThreadPool 의 기본 구현을 제공한다.
+기본 구현의 실행 정책이 필요에 맞지 않는 경우 ThreadPoolExecutor 생성자를 통해 정의할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ThreadPoolExecutor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; corePoolSize&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; maximumPoolSize&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;token keyword&quot;&gt;long&lt;/span&gt; keepAliveTime&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;token class-name&quot;&gt;TimeUnit&lt;/span&gt; unit&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;token class-name&quot;&gt;BlockingQueue&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Runnable&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; workQueue&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;token class-name&quot;&gt;ThreadFactory&lt;/span&gt; threadFactory&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;token class-name&quot;&gt;RejectedExecutionHandler&lt;/span&gt; handler
+		&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;corePoolSize : 스레드 수의 하한, 최소 corePoolSize 만큼의 스레드 수를 유지한다. workQueue가 꽉 차지 않는 이상 스레드 수를 늘리지 않는다.&lt;/li&gt;
+&lt;li&gt;maximumPoolSize : 스레드 수의 상한, workQueue가 꽉찰 경우 최대로 생성될 수 있는 스레드 수&lt;/li&gt;
+&lt;li&gt;keepAliveTime : 유휴 상태인 스레드가 keepAliveTime 시간이 지나면 스레드를 회수하여 corePoolSize를 유지한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Task 마다 스레드를 생성해서 처리하는 것과 비교하여 스레드 풀을 사용하면 CPU를 차지하기 위해 경쟁하면서 대기하는 대신 ThreadPoolExecutor를 사용하면 ThreadPoolExecutor이 관리하는 Runnable Queue에서 대기시킬 수 있다. 이는 스레드를 직접
+만들어 대기하는 것보다 훨씬 경제적이지만, 클라이언트가 서버가 처리할 수 있는 속도보다 더 많은 요청을 몰릴 경우 메모리 부족또는 응답 시간 지연 같은 문제가 여전히 발생할 수 있다.&lt;/p&gt;
+&lt;p&gt;ThreadPoolExecutor는 실행 대기 중인 태스크를 보관하기 위해 BlockingQueue를 사용할 수 있다. 이러한 Task 큐 종류에는 unbounded 큐, bounded 큐, synchronous handoff가 있다.
+newFixedThreadPool 및 newSingleThreadExecutor 의 기본 Task 큐로는 unbounded LinkedBlockingQueue를 사용하는 것 이다. 따라서, 작업이 실행할 수 있는 속도보다 빨리 도착하는 경우 큐가 제한 없이 커질 수 있다.&lt;/p&gt;
+&lt;p&gt;보다 안정적인 리소스를 관리 전략으로는 ArrayBlockingQueue나 bounded LinkedBlockingQueue, PriorityBlockingQueue 와 같은 bounded 큐를 사용하는 것이다.&lt;/p&gt;
+&lt;p&gt;synchronous handoff은 큐를 사용하는 것이 아니라 스레드 간의 핸드 오프를 관리하는 메커니즘이다.
+핸드 오프를 사용하는 SynchronousQueue는 작업을 큐에 넣고 소비자가 큐에서 작업을 꺼내서 실행하는 방식이 아니라 작업을 큐에 넣으려면 다른 스레드가 이미 핸드오프 수락을 위해 대기 중이어야 한다. 작업을 실행할 스레드에 바로 전달할 수 있으므로 더 효율적이다.
+SynchronousQueue는 스레드풀이 무제한이거나 초과 작업을 거부하는 것이 허용되는 경우에 유용한 선택지이다. newCachedThreadPool이 SynchronousQueue를 사용한다.&lt;/p&gt;
+&lt;h2&gt;포화 정책(Saturation policies)&lt;/h2&gt;
+&lt;p&gt;포화 정책은 스레드 풀의 작업 대기열이 가득 찼을 때 어떻게 동작할지를 설명한다. bounded 큐가 가득 차면 포화 정책이 실행된다. ThreadPoolExecutor에 대한 포화 정책은 setRejectedExecutionHandler 메서드를 호출하여 설정할 수 있다.
+RejectedExecutionHandler 구현에는 AbortPolicy, CallerRunsPolicy, DiscardOldestPolicy가 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AbortPolicy: 기본 정책으로 작업 대기열이 가득 차면 RejectedExecutionException을 발생시킨다. 호출자는 이 예외를 잡아서(try-catch) 오버플로우를 처리할 수 있다.&lt;/li&gt;
+&lt;li&gt;DiscardPolicy: 새로 제출된 작업이 대기열에 들어갈 수 없다면, 그 작업을 무시한다.&lt;/li&gt;
+&lt;li&gt;DiscardOldestPolicy: 대기열에서 가장 먼저 실행될 작업을 제거하고 새로운 작업을 대기열에 추가하려고 시도한다. 만약 대기열이 우선순위 큐라면, 가장 높은 우선순위의 작업이 제거된다.&lt;/li&gt;
+&lt;li&gt;CallerRunsPolicy: 이 정책은 작업을 무시하지도, 예외를 발생시키지도 않는다. 대신, 새로운 작업을 제출한 스레드에서 작업을 실행한다. 이는 일종의 &apos;스로틀링&apos;(throttling)으로, 새 작업의 흐름을 늦추기 위해 일부 작업을 호출자에게 다시 돌려보낸다.
+CallerRunsPolicy를 사용하면, 예를 들어 웹 서버에서 모든 스레드가 사용 중이고 대기열이 가득 차면, 다음 작업은 execute 호출을 하는 메인 스레드에서 실행된다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;다음은 CallerRunsPolicy 를 사용한 고정 스레드풀 Executor를 생성하는 코드이다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token class-name&quot;&gt;ThreadPoolExecutor&lt;/span&gt; executor&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ThreadPoolExecutor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
+		&lt;span class=&quot;token constant&quot;&gt;N_THREADS&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;token constant&quot;&gt;N_THREADS&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;token number&quot;&gt;0L&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;token class-name&quot;&gt;TimeUnit&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;MILLISECONDS&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;LinkedBlockingQueue&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Runnable&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;CAPACITY&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+executor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setRejectedExecutionHandler&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ThreadPoolExecutor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;CallerRunsPolicy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;ThreadFactory&lt;/h2&gt;
+&lt;p&gt;스레드 풀에서 새로운 스레드를 생성해야 할 때 ThreadFactory 를 통해 스레드를 생성한다. 기본 스레드 팩토리는 논데몬 스레드를 생성한다. 사용자 정의 스레드 팩토리를 사용하는 이유는 UncaughtExceptionHandler를 지정하거나 디버그 로깅을 수행하는 것과 같은
+사용자 지정 스레드 클래스의 인스턴스를 인스턴스화할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ThreadFactory&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+	&lt;span class=&quot;token class-name&quot;&gt;Thread&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;newThread&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Runnable&lt;/span&gt; r&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Extending ThreadPoolExecutor&lt;/h2&gt;
+&lt;p&gt;ThreadPoolExecutor 는 확장을 위해 설계되어 서브클래스가 오바라이드할 수 있는 후크 메서드를 제공한다.
+beforeExecute, afterExecute 메서드는 작업을 실행하는 스레드에서 호출되며, beforeExecute가 RuntimeException을 던지면 태스트가 실행되지 않고 afterExecute도 호출되지 않는다.
+terminate 메서드는 모든 작업이 완료되고 워커 스레드가 종료된 후 스레드 풀 종료가 완료될 때 호출된다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Java의 동시성 프로그래밍 - Deadlock]]></title><description><![CDATA[DeadLock 스레드 A각 잠금 L을 점유하고 있고 잠금 M을 획득하려고 시도하는 동시에 스레드 B가 잠금 M을 보유하고 있고 잠금 L을 획득하려고 시도하면 두 스레드는 영원히 대기하게 된다. 이러한 상황을 데드락이라고 한다. lock…]]></description><link>https://px201226.github.io/java-concurrency-deadlock/</link><guid isPermaLink="false">https://px201226.github.io/java-concurrency-deadlock/</guid><pubDate>Sun, 17 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;DeadLock&lt;/h2&gt;
 &lt;p&gt;스레드 A각 잠금 L을 점유하고 있고 잠금 M을 획득하려고 시도하는 동시에 스레드 B가 잠금 M을 보유하고 있고 잠금 L을 획득하려고 시도하면 두 스레드는 영원히 대기하게 된다. 이러한 상황을 데드락이라고 한다.&lt;/p&gt;
 &lt;h2&gt;lock-ordering deadlocks&lt;/h2&gt;
 &lt;p&gt;아래 코드는 leftRight(), rightLeft 메서드가 left, right 락을 서로 다른 순서로 잠금을 획득하려고 하기 때문에 데드락이 발생할 수 있다. lock-ordering 은 left, right 락을 필요로 하는 모든 스레드에서 항상 같은 순서로 left, right 락을 획득하도록 하면 데드락이 발생하지 않는다.&lt;/p&gt;
@@ -105,109 +201,85 @@ B -----&gt; lock right -&gt; try to lock left -&gt; wait forever&lt;/code&gt;&lt
 &lt;p&gt;예를 들어, 메시징 애플리케이션에서 메시지 처리에서 버그로 인해 특정 유형의 메시지가 항상 실패하면, 그 메시지는 계속해서 큐의 앞으로 돌아가고 다시 처리된다. 이러한 문제는 &quot;poison message problem&quot;이라고도 부른다. 스레드는 차단되지 않지만, 계속해서 같은 실패를 반복하므로 실제로는 작업이 진행되지 않는다.&lt;/p&gt;
 &lt;p&gt;또는, 협력하는 스레드에서 여러 스레드가 서로의 상태에 반응하여 변경하되, 그 결과로 어느 스레드도 진행되지 못하는 상태가 될 수 있다. 두 사람이 복도에서 서로 양보하면서 영원히 지나가지 못하는 상황을 생각할 수 있다.&lt;/p&gt;
 &lt;p&gt;이러한 유형의 라이브락을 해결하는 하나의 방법은 재시도 메커니즘에 무작위성을 도입하는 것 이다. 예를 들어, 이더넷 네트워크에서 두 스테이션이 동시에 패킷을 보내면 충돌이 발생한다고 할 때 두 스테이션은 재시도 시간에 무작위성을 도입하여 충돌을 피할 수 있다.&lt;/p&gt;
+&lt;p&gt;아래는 Worker1 과 Worker2가 같은 자원 commonResource에 접근하려고 시도하고, 스레드가 자원에 접근할 수 없는 경우 자원을 상대방에게 양보하여 livelock이 발생하는 예제이다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;LiveLockExample&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CommonResource&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Worker&lt;/span&gt; owner&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CommonResource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Worker&lt;/span&gt; owner&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;owner &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; owner&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Worker&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;getOwner&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; owner&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;setOwner&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Worker&lt;/span&gt; d&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            owner &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; d&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Worker&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; name&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;boolean&lt;/span&gt; active&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Worker&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; name&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;boolean&lt;/span&gt; active&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;name &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; name&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;active &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; active&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; name&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;isActive&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; active&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;work&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;CommonResource&lt;/span&gt; commonResource&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Worker&lt;/span&gt; otherWorker&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;active&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;token comment&quot;&gt;// If resource is owned by someone else, wait&lt;/span&gt;
+                &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;commonResource&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getOwner&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;token keyword&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;token function&quot;&gt;wait&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;InterruptedException&lt;/span&gt; e&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;token comment&quot;&gt;// handle&lt;/span&gt;
+                    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+                    &lt;span class=&quot;token keyword&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+                &lt;span class=&quot;token comment&quot;&gt;// If other worker is also active, hand over the common resource to the other worker&lt;/span&gt;
+                &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;otherWorker&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;isActive&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;token class-name&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;out&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot; : handing over the resource to the worker: &quot;&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; otherWorker&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+                    commonResource&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setOwner&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;otherWorker&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+                    &lt;span class=&quot;token keyword&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+                &lt;span class=&quot;token comment&quot;&gt;// Now use the commonResource&lt;/span&gt;
+                &lt;span class=&quot;token class-name&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;out&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;: working on the common resource&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+                active &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;token comment&quot;&gt;// work completed, so set active to false&lt;/span&gt;
+                commonResource&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setOwner&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;otherWorker&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt; args&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Worker&lt;/span&gt; worker1 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Worker&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;Worker 1 &quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Worker&lt;/span&gt; worker2 &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Worker&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;Worker 2&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token boolean&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CommonResource&lt;/span&gt; s &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CommonResource&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;worker1&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; worker1&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;work&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; worker2&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;-&gt;&lt;/span&gt; worker2&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;work&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; worker1&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;blockquote&gt;
 &lt;p&gt;위의 메시징 애플리케이션에서는 Dead-letter-Queue 나 Retry Limit, Exponential Backoff 방식을 사용할 수 있다.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;참조&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Java Concurrency in practice&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Java의 동시성 프로그래밍 - Executor]]></title><description><![CDATA[Executor Task는 논리적인 작업 단위이며, 스레드는 Task를 비동기적으로 실행할 수 있는 기술이다. Java에서는 Task 실행을 추상화하여 Executor 라는 인터페이스를 제공한다. Executor는 다양한 Task…]]></description><link>https://px201226.github.io/java-concurrency-executor/</link><guid isPermaLink="false">https://px201226.github.io/java-concurrency-executor/</guid><pubDate>Sun, 17 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Executor&lt;/h2&gt;
-&lt;p&gt;Task는 논리적인 작업 단위이며, 스레드는 Task를 비동기적으로 실행할 수 있는 기술이다. Java에서는 Task 실행을 추상화하여 Executor 라는 인터페이스를 제공한다. Executor는 다양한 Task 실행 정책을 지원하는 비동기 프레임워크에 기반이 된다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Executor&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-
-	&lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Runnable&lt;/span&gt; command&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Executor 구현은 통계 수집, 애플리케이션 관리 및 모니터링을 추가하기 위한 라이프사이클 지원 및 후크를 제공한다.
-Executor는 생산자-소비자 패턴을 기반으로 Task을 등록하는 작업과 Task를 처리하는 작업을 분리하였다.
-Task의 등록과 처리를 분리는 특정 Task의 실행 정책을 쉽게 변경할 수 있다는 장점이 있다.
-실행 정책은 무엇을, 어디서, 언제, 어떻게를 포함한다.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Task는 어떤 스레드에서 실행되는가?&lt;/li&gt;
-&lt;li&gt;Task는 어떤 순서로 실행되어야 하는가? (FIFO, LIFO, Priority)&lt;/li&gt;
-&lt;li&gt;동시에 실행할 수 있는 작업 수는?&lt;/li&gt;
-&lt;li&gt;몇 개의 작업이 실행 대기열에 포함될 수 있나?&lt;/li&gt;
-&lt;li&gt;처리량 제한으로 작업을 거부해야하는 경우, 어떻게 처리해야 하나?&lt;/li&gt;
-&lt;li&gt;작업을 실행하기 전후 조치는?&lt;/li&gt;
-&lt;/ul&gt;
-&lt;blockquote&gt;
-&lt;p&gt;현재 new Thread(runnable).start() 와 같은 저수준의 스레드를 직접 다루고 있다면 Executor 나 비동기 프레임워크 사용을 적극적으로 고려해보는 것이 좋다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;Executor 라이프사이클&lt;/h2&gt;
-&lt;p&gt;Executor는 Task를 비동기적으로 처리하기 때문에 특정 시점에 제출된 작업의 상태를 즉시 알 수 없다.
-완료되거나 실행 중이거나 실행대기 중일 수 도 있다. Executor는 애플리케이션이 정상적으로 또는 갑작스럽게 종료되더라도 종료로 인한 영향받는 작업의 상태 정보를 애플리케이션에 전달할 수 있어야 한다.
-Executor의 수명 주기 문제를 해결하기 위해 ExecutorService 인터페이스는 Executor를 확장하여 라이프 사이클 관리를 위한 여러 가지 메서드를 제공한다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ExecutorService&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Executor&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-
-	&lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;shutdown&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-	&lt;span class=&quot;token class-name&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Runnable&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;shutdownNow&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-	&lt;span class=&quot;token keyword&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;isShutdown&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-	&lt;span class=&quot;token keyword&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;isTerminated&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-
-	&lt;span class=&quot;token keyword&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;awaitTermination&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;long&lt;/span&gt; timeout&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;TimeUnit&lt;/span&gt; unit&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;InterruptedException&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;token comment&quot;&gt;//...&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;ExecutorService , ExecutorCompletionService 차이
-ExecutorService 는 Task를 제출한 순서대로 결과를 가져와서 처리할 수 있다.
-ExecutorCompletionService 는 Task를 제출한 순서와 상관없이 내부적으로 BlockingQueue 사용하여 완료된 작업 목록 리스트를 유지하여 완료된 Task를 poll 하거나 take할 수 있다.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;ThreadPoolExecutor&lt;/h2&gt;
-&lt;p&gt;ThreadPoolExecutor 는 Executors의 정적 팩토리 메서드로 생성할 수 있는 newCachedThreadPool, newFixedThreadPool, newScheduledThreadPool 의 기본 구현을 제공한다.
-기본 구현의 실행 정책이 필요에 맞지 않는 경우 ThreadPoolExecutor 생성자를 통해 정의할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ThreadPoolExecutor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; corePoolSize&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; maximumPoolSize&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;token keyword&quot;&gt;long&lt;/span&gt; keepAliveTime&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;token class-name&quot;&gt;TimeUnit&lt;/span&gt; unit&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;token class-name&quot;&gt;BlockingQueue&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Runnable&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt; workQueue&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;token class-name&quot;&gt;ThreadFactory&lt;/span&gt; threadFactory&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;token class-name&quot;&gt;RejectedExecutionHandler&lt;/span&gt; handler
-		&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;corePoolSize : 스레드 수의 하한, 최소 corePoolSize 만큼의 스레드 수를 유지한다. workQueue가 꽉 차지 않는 이상 스레드 수를 늘리지 않는다.&lt;/li&gt;
-&lt;li&gt;maximumPoolSize : 스레드 수의 상한, workQueue가 꽉찰 경우 최대로 생성될 수 있는 스레드 수&lt;/li&gt;
-&lt;li&gt;keepAliveTime : 유휴 상태인 스레드가 keepAliveTime 시간이 지나면 스레드를 회수하여 corePoolSize를 유지한다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Task 마다 스레드를 생성해서 처리하는 것과 비교하여 스레드 풀을 사용하면 CPU를 차지하기 위해 경쟁하면서 대기하는 대신 ThreadPoolExecutor를 사용하면 ThreadPoolExecutor이 관리하는 Runnable Queue에서 대기시킬 수 있다. 이는 스레드를 직접
-만들어 대기하는 것보다 훨씬 경제적이지만, 클라이언트가 서버가 처리할 수 있는 속도보다 더 많은 요청을 몰릴 경우 메모리 부족또는 응답 시간 지연 같은 문제가 여전히 발생할 수 있다.&lt;/p&gt;
-&lt;p&gt;ThreadPoolExecutor는 실행 대기 중인 태스크를 보관하기 위해 BlockingQueue를 사용할 수 있다. 이러한 Task 큐 종류에는 unbounded 큐, bounded 큐, synchronous handoff가 있다.
-newFixedThreadPool 및 newSingleThreadExecutor 의 기본 Task 큐로는 unbounded LinkedBlockingQueue를 사용하는 것 이다. 따라서, 작업이 실행할 수 있는 속도보다 빨리 도착하는 경우 큐가 제한 없이 커질 수 있다.&lt;/p&gt;
-&lt;p&gt;보다 안정적인 리소스를 관리 전략으로는 ArrayBlockingQueue나 bounded LinkedBlockingQueue, PriorityBlockingQueue 와 같은 bounded 큐를 사용하는 것이다.&lt;/p&gt;
-&lt;p&gt;synchronous handoff은 큐를 사용하는 것이 아니라 스레드 간의 핸드 오프를 관리하는 메커니즘이다.
-핸드 오프를 사용하는 SynchronousQueue는 작업을 큐에 넣고 소비자가 큐에서 작업을 꺼내서 실행하는 방식이 아니라 작업을 큐에 넣으려면 다른 스레드가 이미 핸드오프 수락을 위해 대기 중이어야 한다. 작업을 실행할 스레드에 바로 전달할 수 있으므로 더 효율적이다.
-SynchronousQueue는 스레드풀이 무제한이거나 초과 작업을 거부하는 것이 허용되는 경우에 유용한 선택지이다. newCachedThreadPool이 SynchronousQueue를 사용한다.&lt;/p&gt;
-&lt;h2&gt;포화 정책(Saturation policies)&lt;/h2&gt;
-&lt;p&gt;포화 정책은 스레드 풀의 작업 대기열이 가득 찼을 때 어떻게 동작할지를 설명한다. bounded 큐가 가득 차면 포화 정책이 실행된다. ThreadPoolExecutor에 대한 포화 정책은 setRejectedExecutionHandler 메서드를 호출하여 설정할 수 있다.
-RejectedExecutionHandler 구현에는 AbortPolicy, CallerRunsPolicy, DiscardOldestPolicy가 있다.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;AbortPolicy: 기본 정책으로 작업 대기열이 가득 차면 RejectedExecutionException을 발생시킨다. 호출자는 이 예외를 잡아서(try-catch) 오버플로우를 처리할 수 있다.&lt;/li&gt;
-&lt;li&gt;DiscardPolicy: 새로 제출된 작업이 대기열에 들어갈 수 없다면, 그 작업을 무시한다.&lt;/li&gt;
-&lt;li&gt;DiscardOldestPolicy: 대기열에서 가장 먼저 실행될 작업을 제거하고 새로운 작업을 대기열에 추가하려고 시도한다. 만약 대기열이 우선순위 큐라면, 가장 높은 우선순위의 작업이 제거된다.&lt;/li&gt;
-&lt;li&gt;CallerRunsPolicy: 이 정책은 작업을 무시하지도, 예외를 발생시키지도 않는다. 대신, 새로운 작업을 제출한 스레드에서 작업을 실행한다. 이는 일종의 &apos;스로틀링&apos;(throttling)으로, 새 작업의 흐름을 늦추기 위해 일부 작업을 호출자에게 다시 돌려보낸다.
-CallerRunsPolicy를 사용하면, 예를 들어 웹 서버에서 모든 스레드가 사용 중이고 대기열이 가득 차면, 다음 작업은 execute 호출을 하는 메인 스레드에서 실행된다.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;다음은 CallerRunsPolicy 를 사용한 고정 스레드풀 Executor를 생성하는 코드이다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token class-name&quot;&gt;ThreadPoolExecutor&lt;/span&gt; executor&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ThreadPoolExecutor&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;
-		&lt;span class=&quot;token constant&quot;&gt;N_THREADS&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;token constant&quot;&gt;N_THREADS&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;token number&quot;&gt;0L&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;token class-name&quot;&gt;TimeUnit&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;MILLISECONDS&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;
-		&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;LinkedBlockingQueue&lt;/span&gt;&lt;span class=&quot;token generics&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Runnable&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token constant&quot;&gt;CAPACITY&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-executor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;setRejectedExecutionHandler&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ThreadPoolExecutor&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;CallerRunsPolicy&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;ThreadFactory&lt;/h2&gt;
-&lt;p&gt;스레드 풀에서 새로운 스레드를 생성해야 할 때 ThreadFactory 를 통해 스레드를 생성한다. 기본 스레드 팩토리는 논데몬 스레드를 생성한다. 사용자 정의 스레드 팩토리를 사용하는 이유는 UncaughtExceptionHandler를 지정하거나 디버그 로깅을 수행하는 것과 같은
-사용자 지정 스레드 클래스의 인스턴스를 인스턴스화할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ThreadFactory&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
-
-	&lt;span class=&quot;token class-name&quot;&gt;Thread&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;newThread&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Runnable&lt;/span&gt; r&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Extending ThreadPoolExecutor&lt;/h2&gt;
-&lt;p&gt;ThreadPoolExecutor 는 확장을 위해 설계되어 서브클래스가 오바라이드할 수 있는 후크 메서드를 제공한다.
-beforeExecute, afterExecute 메서드는 작업을 실행하는 스레드에서 호출되며, beforeExecute가 RuntimeException을 던지면 태스트가 실행되지 않고 afterExecute도 호출되지 않는다.
-terminate 메서드는 모든 작업이 완료되고 워커 스레드가 종료된 후 스레드 풀 종료가 완료될 때 호출된다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[웹 서버를 위한 동시성 프로그래밍 모델]]></title><description><![CDATA[…]]></description><link>https://px201226.github.io/java-concurrency-model/</link><guid isPermaLink="false">https://px201226.github.io/java-concurrency-model/</guid><pubDate>Thu, 07 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;동시성 프로그래밍 모델&lt;/h2&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[웹 서버를 위한 동시성 프로그래밍 모델]]></title><description><![CDATA[…]]></description><link>https://px201226.github.io/java-concurrency-model/</link><guid isPermaLink="false">https://px201226.github.io/java-concurrency-model/</guid><pubDate>Thu, 07 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;동시성 프로그래밍 모델&lt;/h2&gt;
 &lt;p&gt;동시성은 여러 태스크가 동시에 실행된다는 시스템 속성이다. 또한 태스크들 사이에서 상호 작용을 수행할 수 있다.
 이러한 동시성은 단일 코어 프로세서부터 멀티 코어 프로세서, 다중 프로세서, 그리고 분산 시스템까지 다양한 컴퓨팅 환경에서 구현될 수 있다.
 주 목적은 사용자의 응답성을 향상시키고 처리량을 증가시키는 것이다.&lt;/p&gt;
