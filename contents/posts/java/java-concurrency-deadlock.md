@@ -140,6 +140,82 @@ public void transferMoney(Account fromAccount, Account toAccount, DollarAmount a
 
 이러한 유형의 라이브락을 해결하는 하나의 방법은 재시도 메커니즘에 무작위성을 도입하는 것 이다. 예를 들어, 이더넷 네트워크에서 두 스테이션이 동시에 패킷을 보내면 충돌이 발생한다고 할 때 두 스테이션은 재시도 시간에 무작위성을 도입하여 충돌을 피할 수 있다.
 
+아래는 Worker1 과 Worker2가 같은 자원 commonResource에 접근하려고 시도하고, 스레드가 자원에 접근할 수 없는 경우 자원을 상대방에게 양보하여 livelock이 발생하는 예제이다.
+```JAVA
+public class LiveLockExample {
+    static class CommonResource {
+        private Worker owner;
+
+        public CommonResource(Worker owner) {
+            this.owner = owner;
+        }
+
+        public Worker getOwner() {
+            return owner;
+        }
+
+        public synchronized void setOwner(Worker d) {
+            owner = d;
+        }
+    }
+
+    static class Worker {
+        private String name;
+        private boolean active;
+
+        public Worker(String name, boolean active) {
+            this.name = name;
+            this.active = active;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public boolean isActive() {
+            return active;
+        }
+
+        public synchronized void work(CommonResource commonResource, Worker otherWorker) {
+            while (active) {
+                // If resource is owned by someone else, wait
+                if (commonResource.getOwner() != this) {
+                    try {
+                        wait(10);
+                    } catch (InterruptedException e) {
+                        // handle
+                    }
+                    continue;
+                }
+
+                // If other worker is also active, hand over the common resource to the other worker
+                if (otherWorker.isActive()) {
+                    System.out.println(getName() + " : handing over the resource to the worker: " + otherWorker.getName());
+                    commonResource.setOwner(otherWorker);
+                    continue;
+                }
+
+                // Now use the commonResource
+                System.out.println(getName() + ": working on the common resource");
+                active = false;  // work completed, so set active to false
+                commonResource.setOwner(otherWorker);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        final Worker worker1 = new Worker("Worker 1 ", true);
+        final Worker worker2 = new Worker("Worker 2", true);
+
+        final CommonResource s = new CommonResource(worker1);
+
+        new Thread(() -> worker1.work(s, worker2)).start();
+        new Thread(() -> worker2.work(s, worker1)).start();
+    }
+}
+
+```
+
 > 위의 메시징 애플리케이션에서는 Dead-letter-Queue 나 Retry Limit, Exponential Backoff 방식을 사용할 수 있다.
 
 
