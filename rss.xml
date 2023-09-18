@@ -1,4 +1,117 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of @Soo]]></title><description><![CDATA[RDBMS, NoSQL, 분산 처리에 관심이 많은 백엔드 엔지니어입니다.]]></description><link>https://px201226.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 17 Sep 2023 12:30:29 GMT</lastBuildDate><item><title><![CDATA[Java의 동시성 프로그래밍 - executor]]></title><description><![CDATA[Executor Task는 논리적인 작업 단위이며, 스레드는 Task를 비동기적으로 실행할 수 있는 기술이다. Java에서는 Task 실행을 추상화하여 Executor 라는 인터페이스를 제공한다. Executor는 다양한 Task…]]></description><link>https://px201226.github.io/java-concurrency-executor/</link><guid isPermaLink="false">https://px201226.github.io/java-concurrency-executor/</guid><pubDate>Sun, 17 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Executor&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of @Soo]]></title><description><![CDATA[RDBMS, NoSQL, 분산 처리에 관심이 많은 백엔드 엔지니어입니다.]]></description><link>https://px201226.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 18 Sep 2023 14:47:51 GMT</lastBuildDate><item><title><![CDATA[Java의 동시성 프로그래밍 - Deadlock]]></title><description><![CDATA[DeadLock 스레드 A각 잠금 L을 점유하고 있고 잠금 M을 획득하려고 시도하는 동시에 스레드 B가 잠금 M을 보유하고 있고 잠금 L을 획득하려고 시도하면 두 스레드는 영원히 대기하게 된다. 이러한 상황을 데드락이라고 한다. lock…]]></description><link>https://px201226.github.io/java-concurrency-deadlock/</link><guid isPermaLink="false">https://px201226.github.io/java-concurrency-deadlock/</guid><pubDate>Sun, 17 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;DeadLock&lt;/h2&gt;
+&lt;p&gt;스레드 A각 잠금 L을 점유하고 있고 잠금 M을 획득하려고 시도하는 동시에 스레드 B가 잠금 M을 보유하고 있고 잠금 L을 획득하려고 시도하면 두 스레드는 영원히 대기하게 된다. 이러한 상황을 데드락이라고 한다.&lt;/p&gt;
+&lt;h2&gt;lock-ordering deadlocks&lt;/h2&gt;
+&lt;p&gt;아래 코드는 leftRight(), rightLeft 메서드가 left, right 락을 서로 다른 순서로 잠금을 획득하려고 하기 때문에 데드락이 발생할 수 있다. lock-ordering 은 left, right 락을 필요로 하는 모든 스레드에서 항상 같은 순서로 left, right 락을 획득하도록 하면 데드락이 발생하지 않는다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;LeftRightDeadlock&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Object&lt;/span&gt; left &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Object&lt;/span&gt; right &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;leftRight&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;left&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;right&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;token function&quot;&gt;doSomething&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;rightLeft&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;right&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;left&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;token function&quot;&gt;doSomethingElse&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;A ---&gt; lock left -&gt; try to lock right -&gt; wait forever
+B -----&gt; lock right -&gt; try to lock left -&gt; wait forever&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Dynamic lock order deadlocks&lt;/h2&gt;
+&lt;p&gt;데드락을 예방하기 위해 잠금 순서를 제어하기 명확하지 않을 때가 있다. 예를 들면 다음과 같은 fromAccount 에서 toAccount로 계좌 이체하는 코드이다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;transferMoney&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Account&lt;/span&gt; fromAccount&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Account&lt;/span&gt; toAccount&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DollarAmount&lt;/span&gt; amount&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;fromAccount&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;toAccount&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;       &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;위의 코드는 아래와 같은 방식으로 from, to Account를 반대로 호출하면 데드락이 발생할 수 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A: transferMoney(myAccount, yourAccount, 10);&lt;/li&gt;
+&lt;li&gt;B: transferMoney(yourAccount, myAccount, 20);&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;이런 경우에는 System::identityHashCode 와 같은 해시 코드를 사용하여 일관된 잠금 순서를 보장할 수 있다.
+다만, hashCode 는 드물지만 중복되는 경우도 있기 때문에 해시 코드가 동일한 경우에도 잠금 순서를 보장할 수 있어야 한다. 이런 경우에 사용할 수 있는 방법이 &lt;em&gt;tie breaking&lt;/em&gt; 방식이다.&lt;/p&gt;
+&lt;p&gt;tie breaking 방식은 fromAccount, toAccount 잠금을 획득하기 전에 tie breaking 잠금을 획득함으로써 한번에 두개의 잠금을 획득하여 데드락 가능성을 제거할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Object&lt;/span&gt; tie &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;transferMoney&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token class-name&quot;&gt;Account&lt;/span&gt; fromAccount&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Account&lt;/span&gt; toAccount&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DollarAmount&lt;/span&gt; amount&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+    
+    &lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; fromHash &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;identityHashCode&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;fromAccount&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;int&lt;/span&gt; toHash &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;identityHashCode&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;toAccount&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;fromHash &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; toHash&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;fromAccount&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;toAccount&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;token comment&quot;&gt;//...&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;fromHash &lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt; toHash&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;toAccount&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;fromHash&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;token comment&quot;&gt;//...&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;tie&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;fromAccount&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;token keyword&quot;&gt;synchronized&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;toAccount&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;token comment&quot;&gt;//...&lt;/span&gt;
+                &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;객체 협력관계에서의 deadlocks&lt;/h2&gt;
+&lt;p&gt;두 개 이상의 자원(또는 객체, 클래스 등)이 상호 작용을 해야 하는 상황에서 데드락이 발생할 수 있다.
+클래스 A의 method1은 A의 상태를 업데이트하고, 클래스 B의 어떤 메서드를 호출한다.&lt;br&gt;
+클래스 B의 method2는 B의 상태를 업데이트하고, 클래스 A의 상태를 참조한다.&lt;/p&gt;
+&lt;p&gt;이 두 메서드가 서로 다른 스레드에서 동시에 호출될 경우 데드락이 발생할 수 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;method1은 A의 락을 획득하고 B의 메서드를 호출하기 전에 락을 유지한다.&lt;/li&gt;
+&lt;li&gt;method2는 B의 락을 획득하고 A의 상태를 참조하기 전에 락을 유지한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;이런 상황에서는 open call 이나 락의 범위를 축소하여 데드락 가능성을 제거할 수 있다.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Open Call: 락 없이 메소드를 호출하는 것.&lt;/li&gt;
+&lt;li&gt;synchronized 블록 축소: 전체 메소드에 synchronized를 사용하는 대신에, 실제로 공유 상태에 접근하는 부분만 synchronized 블록으로 묶는다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;결합된(composed) 객체를 나중에 동기화(synchronizing)하는 대신에 처음부터 동기화된 객체를 결합하는 것이 더 복잡하다. 동기화된 객체를 안전하게 사용하려면 오픈 콜(open calls)과 락의 순서 정하기(careful lock ordering) 같은 기술이 필요하다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;리소스 deadlocks&lt;/h2&gt;
+&lt;h3&gt;리소스 기반 데드락(Resource-based Deadlock)&lt;/h3&gt;
+&lt;p&gt;예를 들어 두 개의 데이터베이스 연결 풀이 있다고 가정해보자. 스레드 A가 데이터베이스 D1에 연결을 확보하고, D2에 연결을 기다리고 있을 수 있다.
+동시에 스레드 B가 D2에 연결을 확보하고 D1에 연결을 기다릴 수 있다.
+이런 상황에서 두 스레드는 각각 다른 스레드가 확보하고 있는 리소스를 기다리므로 데드락이 발생한다.&lt;/p&gt;
+&lt;h3&gt;스레드 기아 데드락(Thread-Starvation Deadlock)&lt;/h3&gt;
+&lt;p&gt;이 형태의 데드락은 하나의 스레드가 결과를 기다리는 동안 다른 스레드가 그 결과를 생성해야 하는 상황에서 발생한다.
+예를 들어, 하나의 작업이 결과를 생성하고, 다른 작업이 그 결과를 기다리는 경우, 첫 번째 작업이 완료되지 않으면 두 번째 작업도 영원히 기다리게 된다. 이는 특히 작업들이 한정된 스레드 풀에서 실행될 때 문제가 될 수 있다.&lt;/p&gt;
+&lt;h2&gt;Timed tryLock&lt;/h2&gt;
+&lt;p&gt;명시적인 Lock 클래스의 &quot;timed tryLock&quot; 기능을 사용하면 무한정 대기하는 대신에 타임아웃을 설정할 수 있다.
+일반적인 내장 락(intrinsic locks)은 락을 획득할 수 없으면 영원히 대기하게 되지만 명시적인 락(explicit locks)은 타임아웃을 설정할 수 있어, 락 획득에 실패하면 재시도할 수 있는 제어권을 얻을 수 있다.&lt;/p&gt;
+&lt;h2&gt;livelock&lt;/h2&gt;
+&lt;p&gt;라이브락은 스레드가 차단되지는 않았지만 계속 실패할 수 있는 작업을 계속 재시도하여 스레드가 계속 진행되지 못하는 상태의 한 형태를 말한다.&lt;/p&gt;
+&lt;p&gt;예를 들어, 메시징 애플리케이션에서 메시지 처리에서 버그로 인해 특정 유형의 메시지가 항상 실패하면, 그 메시지는 계속해서 큐의 앞으로 돌아가고 다시 처리된다. 이러한 문제는 &quot;poison message problem&quot;이라고도 부른다. 스레드는 차단되지 않지만, 계속해서 같은 실패를 반복하므로 실제로는 작업이 진행되지 않는다.&lt;/p&gt;
+&lt;p&gt;또는, 협력하는 스레드에서 여러 스레드가 서로의 상태에 반응하여 변경하되, 그 결과로 어느 스레드도 진행되지 못하는 상태가 될 수 있다. 두 사람이 복도에서 서로 양보하면서 영원히 지나가지 못하는 상황을 생각할 수 있다.&lt;/p&gt;
+&lt;p&gt;이러한 유형의 라이브락을 해결하는 하나의 방법은 재시도 메커니즘에 무작위성을 도입하는 것 이다. 예를 들어, 이더넷 네트워크에서 두 스테이션이 동시에 패킷을 보내면 충돌이 발생한다고 할 때 두 스테이션은 재시도 시간에 무작위성을 도입하여 충돌을 피할 수 있다.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;위의 메시징 애플리케이션에서는 Dead-letter-Queue 나 Retry Limit, Exponential Backoff 방식을 사용할 수 있다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;참조&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Java Concurrency in practice&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Java의 동시성 프로그래밍 - Executor]]></title><description><![CDATA[Executor Task는 논리적인 작업 단위이며, 스레드는 Task를 비동기적으로 실행할 수 있는 기술이다. Java에서는 Task 실행을 추상화하여 Executor 라는 인터페이스를 제공한다. Executor는 다양한 Task…]]></description><link>https://px201226.github.io/java-concurrency-executor/</link><guid isPermaLink="false">https://px201226.github.io/java-concurrency-executor/</guid><pubDate>Sun, 17 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Executor&lt;/h2&gt;
 &lt;p&gt;Task는 논리적인 작업 단위이며, 스레드는 Task를 비동기적으로 실행할 수 있는 기술이다. Java에서는 Task 실행을 추상화하여 Executor 라는 인터페이스를 제공한다. Executor는 다양한 Task 실행 정책을 지원하는 비동기 프레임워크에 기반이 된다.&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Executor&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
 
