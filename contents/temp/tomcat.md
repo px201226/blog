@@ -206,41 +206,76 @@ offer 메서드의 내용을 살펴보면 현재 스레드 풀의 크기가 최�
 아래는 HTTP Connector를 구성하는 속성들이다.
 자세한 내용은 [여기서](https://tomcat.apache.org/tomcat-8.5-doc/config/http.html) 확인할 수 있다.   
 
-| 속성명 | 설명 |
-|-------|-----|
-|maxConnections|서버가 한 번에 수용하고 처리할 수 있는 최대 연결 수. 이 숫자에 도달하면 서버는 추가로 한 개의 연결을 수용하지만 처리하지는 않는다. 이 추가 연결은 처리 중인 연결 수가 maxConnections 아래로 떨어질 때까지 차단된다. 제한에 도달했을 때 운영 체제는 여전히 acceptCount 설정을 기반으로 연결을 수락할 수 있다. NIO 및 NIO2의 경우 기본값은 10,000이다. APR/native의 경우 기본값은 8,192입니다. NIO/NIO2에만 해당되는데, 이 값을 -1로 설정하면 maxConnections 기능이 비활성화되고 연결이 계산되지 않는다.|
-| acceptCount| maxConnections에 도달했을 때 들어오는 연결 요청에 대해 운영 체제에서 제공하는 대기열의 최대 길이. 운영 체제는 이 설정을 무시하고 대기열에 다른 크기를 사용할 수 있다. 이 큐가 가득 차면 운영 체제에서 추가 연결을 거부하거나 타임아웃이 발생한다. 기본값은 100|
-| address| 이 속성은 Tomcat 서버가 바인딩하는 IP 주소를 지정한다. address 속성이 지정되지 않으면 Tomcat은 모든 주소에 바인딩한다(호스트에 여러 IP 주소가 있는 경우).|
-| allowTrace| true로 설정하면 TRACE HTTP 메서드가 활성화된다. 기본값은 false다.|
-| compressibleMimeTypes| HTTP 압축(다음 속성 참조)을 사용할 수 있는 MIME 타입의 쉼표로 구분된 목록이다. 기본값은 text/html, text/xml, text/plain이다.|
-| compression| 커넥터는 서버의 대역폭을 더 잘 활용하기 위해 HTTP/1.1 GZIP 압축을 사용할 수 있다. 이는 compression 속성을 통해 활성화될 수 있다. 유효한 값은 off(압축 비활성화), on(압축 활성화), force(모든 경우에 압축 강제), 또는 출력이 압축되기 전에 필요한 최소 데이터량을 지정하는 숫자 값이다. compression 속성의 기본값은 off|
-| connectionLinger| 연결이 종료된 후 소켓 연결이 지속될 밀리초 수를 설정한다. 값이 0보다 작으면 지속되지 않는다(이것이 기본값).|
-| connectionTimeout| 커넥터가 연결을 수락한 후 URI 라인을 요청하기 전에 기다리는 밀리초 수다. 기본값은 60,000 밀리초(60초)다.|
-| disableUploadTimeout| 이 속성은 서블릿 실행 중 데이터 업로드에 대한 별도의 타임아웃을 설정할지 여부를 결정한다. 기본값은 false다.|
-| emptySessionPath| 기본값은 false다. true로 설정하면 쿠키에 사용되는 세션 경로는 모두 "/"가 된다. 일반적으로 포틀릿 사양에 따라 작성된 애플리케이션을 실행할 때만 true로 설정한다.|
-| enableLookups| true로 설정하면 request.getRemoteHost() 호출 시 원격 클라이언트의 호스트 이름을 반환하기 위해 DNS 조회를 실행한다. 이 속성이 false이면 DNS 조회는 건너뛰고 IP 주소만 반환한다. enableLookups의 기본값은 false다. DNS 조회에 필요한 오버헤드를 피하기 위해 이 속성을 끄면 성능이 향상된다.|
-| maxHttpHeaderSize| 이 속성은 요청 및 응답 헤더의 최대 크기를 제어한다. 단위는 바이트다. 기본값은 4096 (4K)다.|
-| maxKeepAliveRequest| 이 속성은 HTTP 요청의 "keep-alive" 동작을 제어하며 지속적인 연결(즉, 동일한 HTTP 연결을 통해 여러 요청을 보낼 수 있게 함)을 가능하게 한다. 서버에서 연결이 닫힐 때까지 파이프라인화할 수 있는 요청의 최대 수를 지정한다. maxKeepAliveRequest의 기본값은 100이며, 1로 설정하면 HTTP keep-alive 동작과 파이프라인화가 비활성화된다.|
-| maxPostSize| 컨테이너에서 처리할 수 있는 POST의 최대 크기(바이트 단위)를 지정한다. 기본값은 2,097,152 (2MB)다. 0 또는 음수로 설정하면 이 기능이 비활성화된다.|
-| maxSavePostSize| 클라이언트 인증 또는 양식 인증 작업 중 컨테이너에서 처리할 수 있는 POST의 최대 크기(바이트 단위)를 지정한다. 기본값은 4096 (4K)다. -1로 설정하면 이 기능이 비활성화되며 두 가지 유형의 인증 중 POST된 데이터는 저장되지 않는다.|
-| maxSpareThreads| maxSpareThreads 속성은 사용되지 않는 스레드의 최대 수를 제어한다. Tomcat이 사용되지 않는 것들을 중지하기 전에 허용될 수 있는 스레드의 최대 수다. maxSpareThreads의 기본값은 50이다.|
-| minSpareThreads| minSpareThreads 속성은 커넥터가 초기화될 때 시작되는 스레드의 최소 수를 지정한다. minSpareThreads의 기본값은 4다.|
-| maxThreads| 이 속성은 이 커넥터가 요청을 처리하기 위해 생성되는 스레드의 최대 수를 지정한다. 이는 차례로 커넥터가 처리할 수 있는 동시 요청의 최대 수를 지정한다. maxThreads의 기본값은 200 스레드다.|
-| noCompressionUserAgents| HTTP/1.1 압축에 대한 지원이 불완전한 웹 브라우저의 HTTP UserAgent 값과 일치하는 쉼표로 구분된 목록이다. 여기서 정규 표현식을 사용할 수 있다.|
-| port| port 속성은 이 커넥터가 서버 소켓을 생성하고 들어오는 연결을 기다릴 TCP 포트 번호를 지정한다. 특정 포트 번호-IP 주소 조합에는 하나의 서버 애플리케이션만 바인딩할 수 있다.|
-| protocol| 사용할 HTTP 프로토콜을 지정하며, HTTP/1.1(기본값)으로 설정해야 한다. 이는 기본 org.apache.coyote.http11.Http11Protocol을 로드한다.|
-| implementation| 이건 기본 Java 기반 차단 커넥터다. org.apache.coyote.http11.Http11NioProtocol를 지정하면, 비차단 NIO 커넥터가 선택된다. org.apache.coyote.http11.Http11AprProtocol을 지정하면, APR 커넥터가 선택된다. APR 라이브러리가 Windows의 PATH 변수 또는 Linux/*nix의 LD_LIBRARY_PATH 변수를 통해 사용 가능한 경우 APR 커넥터도 사용된다.|
-| proxyName| Tomcat이 프록시 서버 뒤에서 실행될 때 proxyName 속성(와 proxyPort 속성)이 사용된다. 이는 request.getServerName() 호출을 위한 서버 이름을 지정한다.|
-| proxyPort| 언급했듯이, proxyPort 속성은 프록시 설정에서 사용된다. 이는 request.getServerPort() 호출을 위한 포트 번호를 지정한다.|
-| redirectPort| Connector가 SSL 요청만 지원하지 않고 사용자 요청이 SSL 리소스를 위해 이 Connector로 전송되면, Catalina는 그 요청을 redirectPort 포트 번호로 리다이렉트한다. 기본 Tomcat 설정은 샘플 설정에서 보여진 것처럼 8443을 리다이렉트 포트로 지정한다. 생략되면 기본값은 443이다.|
-| restrictedUserAgents| HTTP/1.1 keep-alive 동작에 대한 지원이 불완전한 웹 브라우저의 HTTP UserAgent 값과 일치하는 쉼표로 구분된 목록이다. 여기서 정규 표현식을 사용할 수 있다.|
-| scheme| scheme 속성은 프로토콜의 이름으로 설정된다. scheme에 지정된 값은 request.getScheme() 메서드 호출에 의해 반환된다. 기본값은 http다. SSL Connector의 경우 https로 설정된다.|
-| secure| 이 속성은 SSL Connector에 대해 true로 설정된다. 이 값은 request.getScheme() 메서드 호출에 의해 반환된다. 기본값은 false다.|
-| server| HTTP 응답을 보낼 때 서버 헤더를 지정한다. 이 속성이 설정되지 않으면, 웹 서버를 식별하는 HTTP 헤더의 Server 문자열은 Apache-Coyote/1.1로 기본 설정된다. 일부 보안 전문가들은 이것을 좋아하지 않는다. 웹 서버 소프트웨어에 대한 정보를 전세계에 알리기 때문이다. 이 웹 서버의 알려진 보안 위협이 있으면 악의적인 사용자에 의해 사용될 수 있다. 이것을 빈 문자열로 설정하면 Server 문자열의 출력을 억제한다.|
-| socketBuffer| 소켓 출력 버퍼링에 사용될 버퍼의 크기(바이트 단위)를 지정한다. 소켓 버퍼의 사용은 성능을 향상시킨다. 기본적으로 9,000 바이트 크기의 버퍼가 사용되며, socketBuffer를 -1로 설정하면 버퍼링이 꺼진다.|
-| tcpNoDelay| 이 속성이 true로 설정되면, TCP_NO_DELAY 네트워크 소켓 옵션이 활성화된다. 기본값은 true다.|
-| threadPriority| Java VM에서 생성된 요청 처리 스레드의 Java 스레드 우선 순위를 지정한다. 기본값은 java.lang.Thread#NORM_PRIORITY다.|
-| URIEncoding| URI 바이트를 디코딩하는 데 사용되는 문자 인코딩을 지정한다. 기본값은 ISO-8859-1이다.|
+[//]: # ()
+[//]: # (| 속성명 | 설명 |)
+
+[//]: # (|-------|-----|)
+
+[//]: # (|maxConnections|서버가 한 번에 수용하고 처리할 수 있는 최대 연결 수. 이 숫자에 도달하면 서버는 추가로 한 개의 연결을 수용하지만 처리하지는 않는다. 이 추가 연결은 처리 중인 연결 수가 maxConnections 아래로 떨어질 때까지 차단된다. 제한에 도달했을 때 운영 체제는 여전히 acceptCount 설정을 기반으로 연결을 수락할 수 있다. NIO 및 NIO2의 경우 기본값은 10,000이다. APR/native의 경우 기본값은 8,192입니다. NIO/NIO2에만 해당되는데, 이 값을 -1로 설정하면 maxConnections 기능이 비활성화되고 연결이 계산되지 않는다.|)
+
+[//]: # (| acceptCount| maxConnections에 도달했을 때 들어오는 연결 요청에 대해 운영 체제에서 제공하는 대기열의 최대 길이. 운영 체제는 이 설정을 무시하고 대기열에 다른 크기를 사용할 수 있다. 이 큐가 가득 차면 운영 체제에서 추가 연결을 거부하거나 타임아웃이 발생한다. 기본값은 100|)
+
+[//]: # (| address| 이 속성은 Tomcat 서버가 바인딩하는 IP 주소를 지정한다. address 속성이 지정되지 않으면 Tomcat은 모든 주소에 바인딩한다&#40;호스트에 여러 IP 주소가 있는 경우&#41;.|)
+
+[//]: # (| allowTrace| true로 설정하면 TRACE HTTP 메서드가 활성화된다. 기본값은 false다.|)
+
+[//]: # (| compressibleMimeTypes| HTTP 압축&#40;다음 속성 참조&#41;을 사용할 수 있는 MIME 타입의 쉼표로 구분된 목록이다. 기본값은 text/html, text/xml, text/plain이다.|)
+
+[//]: # (| compression| 커넥터는 서버의 대역폭을 더 잘 활용하기 위해 HTTP/1.1 GZIP 압축을 사용할 수 있다. 이는 compression 속성을 통해 활성화될 수 있다. 유효한 값은 off&#40;압축 비활성화&#41;, on&#40;압축 활성화&#41;, force&#40;모든 경우에 압축 강제&#41;, 또는 출력이 압축되기 전에 필요한 최소 데이터량을 지정하는 숫자 값이다. compression 속성의 기본값은 off|)
+
+[//]: # (| connectionLinger| 연결이 종료된 후 소켓 연결이 지속될 밀리초 수를 설정한다. 값이 0보다 작으면 지속되지 않는다&#40;이것이 기본값&#41;.|)
+
+[//]: # (| connectionTimeout| 커넥터가 연결을 수락한 후 URI 라인을 요청하기 전에 기다리는 밀리초 수다. 기본값은 60,000 밀리초&#40;60초&#41;다.|)
+
+[//]: # (| disableUploadTimeout| 이 속성은 서블릿 실행 중 데이터 업로드에 대한 별도의 타임아웃을 설정할지 여부를 결정한다. 기본값은 false다.|)
+
+[//]: # (| emptySessionPath| 기본값은 false다. true로 설정하면 쿠키에 사용되는 세션 경로는 모두 "/"가 된다. 일반적으로 포틀릿 사양에 따라 작성된 애플리케이션을 실행할 때만 true로 설정한다.|)
+
+[//]: # (| enableLookups| true로 설정하면 request.getRemoteHost&#40;&#41; 호출 시 원격 클라이언트의 호스트 이름을 반환하기 위해 DNS 조회를 실행한다. 이 속성이 false이면 DNS 조회는 건너뛰고 IP 주소만 반환한다. enableLookups의 기본값은 false다. DNS 조회에 필요한 오버헤드를 피하기 위해 이 속성을 끄면 성능이 향상된다.|)
+
+[//]: # (| maxHttpHeaderSize| 이 속성은 요청 및 응답 헤더의 최대 크기를 제어한다. 단위는 바이트다. 기본값은 4096 &#40;4K&#41;다.|)
+
+[//]: # (| maxKeepAliveRequest| 이 속성은 HTTP 요청의 "keep-alive" 동작을 제어하며 지속적인 연결&#40;즉, 동일한 HTTP 연결을 통해 여러 요청을 보낼 수 있게 함&#41;을 가능하게 한다. 서버에서 연결이 닫힐 때까지 파이프라인화할 수 있는 요청의 최대 수를 지정한다. maxKeepAliveRequest의 기본값은 100이며, 1로 설정하면 HTTP keep-alive 동작과 파이프라인화가 비활성화된다.|)
+
+[//]: # (| maxPostSize| 컨테이너에서 처리할 수 있는 POST의 최대 크기&#40;바이트 단위&#41;를 지정한다. 기본값은 2,097,152 &#40;2MB&#41;다. 0 또는 음수로 설정하면 이 기능이 비활성화된다.|)
+
+[//]: # (| maxSavePostSize| 클라이언트 인증 또는 양식 인증 작업 중 컨테이너에서 처리할 수 있는 POST의 최대 크기&#40;바이트 단위&#41;를 지정한다. 기본값은 4096 &#40;4K&#41;다. -1로 설정하면 이 기능이 비활성화되며 두 가지 유형의 인증 중 POST된 데이터는 저장되지 않는다.|)
+
+[//]: # (| maxSpareThreads| maxSpareThreads 속성은 사용되지 않는 스레드의 최대 수를 제어한다. Tomcat이 사용되지 않는 것들을 중지하기 전에 허용될 수 있는 스레드의 최대 수다. maxSpareThreads의 기본값은 50이다.|)
+
+[//]: # (| minSpareThreads| minSpareThreads 속성은 커넥터가 초기화될 때 시작되는 스레드의 최소 수를 지정한다. minSpareThreads의 기본값은 4다.|)
+
+[//]: # (| maxThreads| 이 속성은 이 커넥터가 요청을 처리하기 위해 생성되는 스레드의 최대 수를 지정한다. 이는 차례로 커넥터가 처리할 수 있는 동시 요청의 최대 수를 지정한다. maxThreads의 기본값은 200 스레드다.|)
+
+[//]: # (| noCompressionUserAgents| HTTP/1.1 압축에 대한 지원이 불완전한 웹 브라우저의 HTTP UserAgent 값과 일치하는 쉼표로 구분된 목록이다. 여기서 정규 표현식을 사용할 수 있다.|)
+
+[//]: # (| port| port 속성은 이 커넥터가 서버 소켓을 생성하고 들어오는 연결을 기다릴 TCP 포트 번호를 지정한다. 특정 포트 번호-IP 주소 조합에는 하나의 서버 애플리케이션만 바인딩할 수 있다.|)
+
+[//]: # (| protocol| 사용할 HTTP 프로토콜을 지정하며, HTTP/1.1&#40;기본값&#41;으로 설정해야 한다. 이는 기본 org.apache.coyote.http11.Http11Protocol을 로드한다.|)
+
+[//]: # (| implementation| 이건 기본 Java 기반 차단 커넥터다. org.apache.coyote.http11.Http11NioProtocol를 지정하면, 비차단 NIO 커넥터가 선택된다. org.apache.coyote.http11.Http11AprProtocol을 지정하면, APR 커넥터가 선택된다. APR 라이브러리가 Windows의 PATH 변수 또는 Linux/*nix의 LD_LIBRARY_PATH 변수를 통해 사용 가능한 경우 APR 커넥터도 사용된다.|)
+
+[//]: # (| proxyName| Tomcat이 프록시 서버 뒤에서 실행될 때 proxyName 속성&#40;와 proxyPort 속성&#41;이 사용된다. 이는 request.getServerName&#40;&#41; 호출을 위한 서버 이름을 지정한다.|)
+
+[//]: # (| proxyPort| 언급했듯이, proxyPort 속성은 프록시 설정에서 사용된다. 이는 request.getServerPort&#40;&#41; 호출을 위한 포트 번호를 지정한다.|)
+
+[//]: # (| redirectPort| Connector가 SSL 요청만 지원하지 않고 사용자 요청이 SSL 리소스를 위해 이 Connector로 전송되면, Catalina는 그 요청을 redirectPort 포트 번호로 리다이렉트한다. 기본 Tomcat 설정은 샘플 설정에서 보여진 것처럼 8443을 리다이렉트 포트로 지정한다. 생략되면 기본값은 443이다.|)
+
+[//]: # (| restrictedUserAgents| HTTP/1.1 keep-alive 동작에 대한 지원이 불완전한 웹 브라우저의 HTTP UserAgent 값과 일치하는 쉼표로 구분된 목록이다. 여기서 정규 표현식을 사용할 수 있다.|)
+
+[//]: # (| scheme| scheme 속성은 프로토콜의 이름으로 설정된다. scheme에 지정된 값은 request.getScheme&#40;&#41; 메서드 호출에 의해 반환된다. 기본값은 http다. SSL Connector의 경우 https로 설정된다.|)
+
+[//]: # (| secure| 이 속성은 SSL Connector에 대해 true로 설정된다. 이 값은 request.getScheme&#40;&#41; 메서드 호출에 의해 반환된다. 기본값은 false다.|)
+
+[//]: # (| server| HTTP 응답을 보낼 때 서버 헤더를 지정한다. 이 속성이 설정되지 않으면, 웹 서버를 식별하는 HTTP 헤더의 Server 문자열은 Apache-Coyote/1.1로 기본 설정된다. 일부 보안 전문가들은 이것을 좋아하지 않는다. 웹 서버 소프트웨어에 대한 정보를 전세계에 알리기 때문이다. 이 웹 서버의 알려진 보안 위협이 있으면 악의적인 사용자에 의해 사용될 수 있다. 이것을 빈 문자열로 설정하면 Server 문자열의 출력을 억제한다.|)
+
+[//]: # (| socketBuffer| 소켓 출력 버퍼링에 사용될 버퍼의 크기&#40;바이트 단위&#41;를 지정한다. 소켓 버퍼의 사용은 성능을 향상시킨다. 기본적으로 9,000 바이트 크기의 버퍼가 사용되며, socketBuffer를 -1로 설정하면 버퍼링이 꺼진다.|)
+
+[//]: # (| tcpNoDelay| 이 속성이 true로 설정되면, TCP_NO_DELAY 네트워크 소켓 옵션이 활성화된다. 기본값은 true다.|)
+
+[//]: # (| threadPriority| Java VM에서 생성된 요청 처리 스레드의 Java 스레드 우선 순위를 지정한다. 기본값은 java.lang.Thread#NORM_PRIORITY다.|)
+
+[//]: # (| URIEncoding| URI 바이트를 디코딩하는 데 사용되는 문자 인코딩을 지정한다. 기본값은 ISO-8859-1이다.|)
 
 
 ## HTTP NIO Connector
@@ -259,3 +294,81 @@ Java Non-Blocking IO의 핵심은 Selector를 이용한 채널 관리이다.
 관심있는 채널(요청, 읽기, 준비완료 등)에 Selector에 등록하고 싱글 스레드가 Selector를 폴링하여 준비된 채널에 대해 지정된 콜백을 실행하여 작업을 처리한다.
 HTTP NIO Connector 도 위와 같은 방식으로 이벤트를 처리하고 있으며, 아래와 같은 아키텍처를 가진다
 ![img_3.png](tomcat%2Fimg_3.png)
+
+
+#### Acceptor
+Acceptor 스레드는 serverSocket.accept() 로 소켓 연결을 하고 반환된 SocketChannel 을
+Tomcat의 NioChannel로 캡슐화한다. NioChannel은 다시 PollerEvent로 래핑되고 이벤트 큐에 등록한다.
+Acceptor 스레드는 소켓 연결 수락에 대한 이벤트를 생성하는 생성자 스레드를 의미한다.
+
+```JAVA
+// Acceptor.java, NioEndpoint.java 메서드 중 일부
+socket = endpoint.serverSocketAccept(); // 소켓 연결을 수락한다.
+endpoint.setSocketOptions(socket); // 소켓 처리 로직
+poller.register(socketWrapper); // 이벤트큐에 PollerEvent 등록
+```
+
+
+#### Poller
+Non Blocking IO 처리의 핵심인 이벤트 루프 로직이 포함되어 있다. Poller는 이벤트 큐에서 PollerEvent를 소비한다.
+PollerEvent 에서 꺼낸 Channel을 Selector에 등록하고 Selector는 읽을 수 있는 소켓을 순회하며 해당 소켓을 Worker 스레드에 전달한다.
+
+```JAVA
+public class Poller implements Runnable {
+
+	// Poller 스레드가 폴링하면서 Selector에 Channel을 등록한다.
+    public boolean events() {
+    
+        PollerEvent pe = null;
+        for (int i = 0, size = events.size(); i < size && (pe = events.poll()) != null; i++) {
+    
+            NioSocketWrapper socketWrapper = pe.getSocketWrapper();
+            SocketChannel sc = socketWrapper.getSocket().getIOChannel();
+            int interestOps = pe.getInterestOps();
+            if (sc == null) {
+                socketWrapper.close();
+            } else if (interestOps == OP_REGISTER) {
+                try {
+                    sc.register(getSelector(), SelectionKey.OP_READ, socketWrapper); // Selector에 채널 등록
+                } catch (Exception x) {
+                    log.error(sm.getString("endpoint.nio.registerFail"), x);
+                }
+            }
+    
+        }
+    
+        // ...
+    }
+    
+    // Selector.select(), processKey()
+    @Override
+    public void run(){
+
+	    while (true) {					
+            events(); // 이벤트 등록
+				
+		    Iterator<SelectionKey> iterator =
+				    keyCount > 0 ? selector.selectedKeys().iterator() : null;
+		    // Walk through the collection of ready keys and dispatch
+		    // any active event.
+		    while (iterator != null && iterator.hasNext()) {
+			    SelectionKey sk = iterator.next();
+			    iterator.remove();
+			    NioSocketWrapper socketWrapper = (NioSocketWrapper) sk.attachment();
+			    // Attachment may be null if another thread has called
+			    // cancelledKey()
+			    if (socketWrapper != null) {
+				    processKey(sk, socketWrapper);
+			    }
+		    }
+	    }
+    }
+}
+
+```
+
+#### Executor(Worker Thread)
+Worker 스레드에서는 소켓에서 http 요청 읽기를 하고 이를 HttpServletRequest 객체로 캡슐화하고, 이를 서블릿으로 디스패치하여 응답을 받은 다음에 클라이언트에 다시 응답을 보낸다.
+Poller로부터 소켓을 받아 SocketProcessor 객체로 캡슐화하고 Http11NioProcessor
+스프링 로그에 출력되는 `http-nio-8080-exec-?` 가 바로 이 Worker 스레드를 의미한다.
+
