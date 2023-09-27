@@ -183,6 +183,7 @@ const StyledMarkdown = styled.div`
     ::-webkit-scrollbar {
       height: 10px;
     }
+
     ::-webkit-scrollbar-track {
       background: ${props => props.theme.colors.scrollTrack};
     }
@@ -219,7 +220,7 @@ const StyledMarkdown = styled.div`
 
   & a {
     padding: 1.6px 0;
-    color: ${props => props.theme.colors.text};
+    color: #477cc2;
   }
 
   & a:hover {
@@ -227,7 +228,7 @@ const StyledMarkdown = styled.div`
     color: ${props => props.theme.colors.hoveredLinkText};
   }
 
-  @media (max-width: 480px){
+  @media (max-width: 480px) {
     & code[class*="language-"],
     & pre[class*="language-"] {
       font-size: 90%;
