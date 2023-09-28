@@ -287,7 +287,7 @@ offer 메서드의 내용을 살펴보면 현재 스레드 풀의 크기가 최�
 
 | 속성명                  | 설명                                                                                                                                                                                                                                                                                                                                                             |
 |----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| maxConnections       | 서버가 한 번에 수용하고 처리할 수 있는 최대 연결 수. 이 숫자에 도달하면 서버는 추가로 한 개의 연결을 수용하지만 처리하지는 않는다. 이 추가 연결은 처리 중인 연결 수가 maxConnections 아래로 떨어질 때까지 차단된다. 제한에 도달했을 때 운영 체제는 여전히 acceptCount 설정을 기반으로 연결을 수락할 수 있다. NIO 및 NIO2의 경우 기본값은 10,000이다. APR/native의 경우 기본값은 8,192입니다. NIO/NIO2에만 해당되는데, 이 값을 -1로 설정하면 maxConnections 기능이 비활성화되고 연결이 계산되지 않는다.                                |
+| maxConnections       | 서버가 한 번에 수용하고 처리할 수 있는 최대 연결 수. 이 숫자에 도달하면 서버는 추가로 한 개의 연결을 수용하지만 처리하지는 않는다. 이 추가 연결은 처리 중인 연결 수가 maxConnections 아래로 떨어질 때까지 차단된다. 제한에 도달했을 때 운영 체제는 여전히 acceptCount 설정을 기반으로 연결을 수락할 수 있다. NIO 및 NIO2의 경우 기본값은 10,000이다. APR/native의 경우 기본값은 8,192이다. NIO/NIO2에만 해당되는데, 이 값을 -1로 설정하면 maxConnections 기능이 비활성화되고 연결이 계산되지 않는다.                                 |
 | acceptCount          | maxConnections에 도달했을 때 들어오는 연결 요청에 대해 운영 체제에서 제공하는 대기열의 최대 길이. 운영 체제는 이 설정을 무시하고 대기열에 다른 크기를 사용할 수 있다. 이 큐가 가득 차면 운영 체제에서 추가 연결을 거부하거나 타임아웃이 발생한다. 기본값은 100                                                                                                                                                                                                    |
 | maxKeepAliveRequest  | 이 속성은 HTTP 요청의 "keep-alive" 동작을 제어하며 지속적인 연결(즉, 동일한 HTTP 연결을 통해 여러 요청을 보낼 수 있게 함)을 가능하게 한다. 서버에서 연결이 닫힐 때까지 파이프라인화할 수 있는 요청의 최대 수를 지정한다. maxKeepAliveRequest의 기본값은 100이며, 1로 설정하면 HTTP keep-alive 동작과 파이프라인화가 비활성화된다.                                                                                                                                          |
 | maxSpareThreads      | maxSpareThreads 속성은 사용되지 않는 스레드의 최대 수를 제어한다. Tomcat이 사용되지 않는 것들을 중지하기 전에 허용될 수 있는 스레드의 최대 수다. maxSpareThreads의 기본값은 50이다.                                                                                                                                                                                                                                      |
@@ -529,4 +529,9 @@ getHandler().process(socketWrapper,SocketEvent.OPEN_READ);
 		connector.getService().getContainer().getPipeline().getFirst().invoke(request,response); // 컨테이너로 요청 전달
 ```
 
-
+## 참조
+- https://tomcat.apache.org/tomcat-8.5-doc/config/http.html
+- https://download.oracle.com/otn-pub/jcp/servlet-3_1-fr-eval-spec/servlet-3_1-final.pdf?AuthParam=1695794208_54642e957120d983f4ca811f71280a25
+- https://velog.io/@jihoson94/BIO-NIO-Connector-in-Tomcat
+- https://www.programmersought.com/article/90283888271/
+- Pro apache tomcat 6
