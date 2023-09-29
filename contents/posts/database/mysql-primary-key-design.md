@@ -24,12 +24,12 @@ PK값이 변경된다면 해당 레코드의 물리적인 위치도 변경된다
 ## 클러스터형 인덱스
 
 고성능을 위한 Primary Key 를 설계하기 위해서는 Primary Key 의 저장 구조인 클러스터형 인덱스에 대한 이해가 필요하다.
-아래의 그림은 Secondary Index **(Non-Clusted Index)** 와 Primary Key Index **(Clusted Index)** 의 저장 구조를 나타낸다.   
+아래의 그림은 **Secondary Index**(Non-Clusted Index) 와 **Primary Key Index**(Clusted Index) 의 저장 구조를 나타낸다.   
 
-Secondary Index **(Non-Clusted Index)** 그림의 리프 노드를 보면 Index Key 값에 해당 하는 Primary Key 값을 저장하고 있는 것을 볼 수 있다.
+**Secondary Index**(Non-Clusted Index) 그림의 리프 노드를 보면 Index Key 값에 해당 하는 Primary Key 값을 저장하고 있는 것을 볼 수 있다.
 Index Key 값은 정렬되어 있지만 Index Key 값에 맵핑되는 Primary Key들 사이에는 아무런 순서관계가 없다.
 
-Primary Key Index **(Clusted Index)** 그림의 리프 노드는 Index Key 값 기준으로 정렬되어 있고,
+**Primary Key Index**(Clusted Index) 그림의 리프 노드는 Index Key 값 기준으로 정렬되어 있고,
 참조가 아닌 실제 레코드를 저장하는 페이지가 리프노드에 위치해 있다. 페이지 내에서도 Primary Index Key 값 기준으로 레코드가 물리적으로 정렬되어 있다.
 
 <!-- more -->
@@ -84,16 +84,16 @@ Auto increament 와 UID 를 이용한 기본키 유형은 대리키로 일반화
 
 ![mysql_img_1.png](./img/mysql_img_1.png)
 
-Post, Comment 테이블 둘 다 Auto Increament 기본키를 사용하고, Comment 테이블에 post_id FK 를 두어 Post와 연관관계를 맺는 방식이다.
+Post, Comment 테이블 둘 다 Auto Increament 기본키를 사용하고, Comment 테이블에 post\_id FK 를 두어 Post와 연관관계를 맺는 방식이다.
 Post 테이블이 Driving Table이고 Comment 테이블이 Driven Table 인 경우 두 테이블을 조인하게 되면 아래 그림와 같은 방식으로 데이터를 탐색하게 된다.
 
 ![mysql_img_2.png](./img/mysql_img_2.png)
 
-조인 연산을 수행하기 위해, Post 테이블의 기본키와 연결된 Comment 테이블의 Post_id 값으로 조인이 이루어진다. Comment 테이블의 post_id에는 이미 인덱스가 생성되어 있기 때문에, Index Range Scan을 사용하여 Post 테이블과 Comment 테이블을 맵핑할 수 있다.
+조인 연산을 수행하기 위해, Post 테이블의 기본키와 연결된 Comment 테이블의 Post\_id 값으로 조인이 이루어진다. Comment 테이블의 post_id에는 이미 인덱스가 생성되어 있기 때문에, Index Range Scan을 사용하여 Post 테이블과 Comment 테이블을 맵핑할 수 있다.
 
-그 다음 단계에서는 SELECT 결과를 가져오기 위해 Comment 테이블의 레코드를 검색한다. 이 과정에서 Comment 레코드의 탐색을 위해 Random I/O가 발생하게 된다. Comment 테이블의 POST_ID_IDX 인덱스는 POST_ID별로 정렬되어 있어 같은 POST_ID를 가지더라도 COMMENT_ID는 멀리 떨어져있는 값을 가질 수 있다.
+그 다음 단계에서는 SELECT 결과를 가져오기 위해 Comment 테이블의 레코드를 검색한다. 이 과정에서 Comment 레코드의 탐색을 위해 Random I/O가 발생하게 된다. Comment 테이블의 POST\_ID\_IDX 인덱스는 POST\_ID별로 정렬되어 있어 같은 POST\_ID를 가지더라도 COMMENT\_ID는 멀리 떨어져있는 값을 가질 수 있다.
 
-예를 들어 위의 그림에서, Post 테이블에서 id=3인 레코드를 조회하면, Comment 테이블의 post_id와의 조인 결과로 Comment id (100, 200)이 반환된다. 페이지 당 50개 레코드가 저장된다고 가정하면 2개의 Comment 레코드를 가져오기 위해 총 2개의 페이지 읽기 작업이 필요하게 된다.
+예를 들어 위의 그림에서, Post 테이블에서 id=3인 레코드를 조회하면, Comment 테이블의 post\_id와의 조인 결과로 Comment id (100, 200)이 반환된다. 페이지 당 50개 레코드가 저장된다고 가정하면 2개의 Comment 레코드를 가져오기 위해 총 2개의 페이지 읽기 작업이 필요하게 된다.
 
 
 ### 부모테이블의 기본키를 자식 테이블 기본키에 포함하는 경우 (식별관계)
@@ -108,13 +108,13 @@ Post 테이블이 Driving Table이고 Comment 테이블이 Driven Table 인 경�
 
 두 방식에서 논리적 페이지 I/O는 2로 동일하지만, 물리적 페이지 I/O(캐시 적용 시)는 각각 2와 1로 다르다. 조인되는 데이터가 많아질수록 두 방식 사이의 물리적 I/O 차이는 더욱 커지게 된다.
 
-이러한 결과는 두 번째 케이스에서 식별관계를 사용해 기본키를 복합키로 구성했기 때문에 발생한다. POST_ID를 기준으로 조인을 수행할 때, 공간적 지역성(Spatial Locality)의 원리가 적용되었다고 볼 수 있다. 특정 Post에 속한 Comment 집합은 같은 논리적 영역에 속하는 인스턴스라고 볼 수 있다. POST_ID와 COMMENT_ID로 클러스터링하면, 물리적으로도 POST_ID에 속한 COMMENT 집합이 유사한 영역에 위치하게 되므로 캐싱 확률이 높아지게 된다.
+이러한 결과는 두 번째 케이스에서 식별관계를 사용해 기본키를 복합키로 구성했기 때문에 발생한다. POST\_ID를 기준으로 조인을 수행할 때, 공간적 지역성(Spatial Locality)의 원리가 적용되었다고 볼 수 있다. 특정 Post에 속한 Comment 집합은 같은 논리적 영역에 속하는 인스턴스라고 볼 수 있다. POST_ID와 COMMENT_ID로 클러스터링하면, 물리적으로도 POST_ID에 속한 COMMENT 집합이 유사한 영역에 위치하게 되므로 캐싱 확률이 높아지게 된다.
 
-실제로 같은 페이지 번호에 저장되어 있는 레코드를 탐색하기 위해서 몇번의 I/O가 발생했는지 확인하기 위해서는 MySQL에서 제공하는 상태 변수 중 Innodb_buffer_pool_reads 값을 확인하여 물리적 I/O 발생량을 확인할 수 있다. 해당 상태변수는 버퍼풀에서 읽지못하고 디스크에서 직접 읽은 수를 의미하는 변수이다.
+실제로 같은 페이지 번호에 저장되어 있는 레코드를 탐색하기 위해서 몇번의 I/O가 발생했는지 확인하기 위해서는 MySQL에서 제공하는 상태 변수 중 Innodb\_buffer\_pool\_reads 값을 확인하여 물리적 I/O 발생량을 확인할 수 있다. 해당 상태변수는 버퍼풀에서 읽지못하고 디스크에서 직접 읽은 수를 의미하는 변수이다.
 
 
 
-#### 데이터를 읽기 전에 Innodb_buffer_pool_reads 값
+#### 데이터를 읽기 전에 Innodb\_buffer\_pool\_reads 값
 ```shell
 mysql> SHOW SESSION STATUS LIKE 'Innodb_buffer_pool_reads%';
 +--------------------------+-------+
@@ -130,8 +130,8 @@ mysql> SHOW SESSION STATUS LIKE 'Innodb_buffer_pool_reads%';
 #### 멀리 떨어진 두 개의 Record를 두 건 읽는 경우 (레코드의 페이지가 다른 경우)
 ```shell
 mysql> select *
--> from `MARKETBOM2_SCHM`.BIZ_SLIP_TRADE
--> where BIZ_SLIP_TRADE.TRADE_SLIP_NO in (2000,3000);
+-> from ORDER
+-> where ORDER.ORDER_NO in (2000,3000);
 
 SHOW SESSION STATUS LIKE 'Innodb_buffer_pool_reads%';
 +--------------------------+-------+
@@ -141,7 +141,7 @@ SHOW SESSION STATUS LIKE 'Innodb_buffer_pool_reads%';
 +--------------------------+-------+
 1 row in set (0.04 sec)
 ```
-PK가 2000, 3000 인 레코드 두 건을 읽었을 떄 Innodb_buffer_pool_reads 변수가 1652 → 1654 로 증가된 것을 확인할 수 있다. 2번의 Disk I/O가 발생하였다.
+PK가 2000, 3000 인 레코드 두 건을 읽었을 떄 Innodb\_buffer\_pool\_reads 변수가 1652 → 1654 로 증가된 것을 확인할 수 있다. 2번의 Disk I/O가 발생하였다.
 
 
 #### 클러스터링으로 인접한 Record를 두 건 읽는 경우 (레코드 페이지가 같은 경우)
@@ -160,7 +160,7 @@ mysql> SHOW SESSION STATUS LIKE 'Innodb_buffer_pool_reads%';
 1 row in set (0.01 sec)
 ```
 
-PK가 5000, 5001 인 레코드를 두 건 읽었을 때 Innodb_buffer_pool_read 변수가 1654 → 1655 로 증가된 것을 확인할 수 있다. 아까와 같이 레코드를 두 건 읽었지만 실제 Disk I/O 발생량은 1번인 것을 확인할 수 있다.
+PK가 5000, 5001 인 레코드를 두 건 읽었을 때 Innodb\_buffer\_pool\_read 변수가 1654 → 1655 로 증가된 것을 확인할 수 있다. 아까와 같이 레코드를 두 건 읽었지만 실제 Disk I/O 발생량은 1번인 것을 확인할 수 있다.
 
 
 ## 정리
