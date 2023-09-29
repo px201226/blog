@@ -211,10 +211,10 @@ PK값이 변경된다면 해당 레코드의 물리적인 위치도 변경된다
 또한, MySQL은 Secondary Index의 Leaf Node에 오라클과 같이 물리적 위치에 대한 참조(ROWID)가 아닌 PK 값을 저장하고, PK 인덱스를 통해 실제 디스크 블록에 접근한다. 따라서, MySQL에서 PK 는 단순히 데이터를 식별하기 위한 식별자 역할뿐만 아니라 내부 구현에도 관여하기 때문에 그 중요성은 매우 크다고 볼 수 있다.</p>
 <h2>클러스터형 인덱스</h2>
 <p>고성능을 위한 Primary Key 를 설계하기 위해서는 Primary Key 의 저장 구조인 클러스터형 인덱스에 대한 이해가 필요하다.
-아래의 그림은 Secondary Index <strong>(Non-Clusted Index)</strong> 와 Primary Key Index <strong>(Clusted Index)</strong> 의 저장 구조를 나타낸다.   </p>
-<p>Secondary Index <strong>(Non-Clusted Index)</strong> 그림의 리프 노드를 보면 Index Key 값에 해당 하는 Primary Key 값을 저장하고 있는 것을 볼 수 있다.
+아래의 그림은 <strong>Secondary Index</strong>(Non-Clusted Index) 와 <strong>Primary Key Index</strong>(Clusted Index) 의 저장 구조를 나타낸다.   </p>
+<p><strong>Secondary Index</strong>(Non-Clusted Index) 그림의 리프 노드를 보면 Index Key 값에 해당 하는 Primary Key 값을 저장하고 있는 것을 볼 수 있다.
 Index Key 값은 정렬되어 있지만 Index Key 값에 맵핑되는 Primary Key들 사이에는 아무런 순서관계가 없다.</p>
-<p>Primary Key Index <strong>(Clusted Index)</strong> 그림의 리프 노드는 Index Key 값 기준으로 정렬되어 있고,
+<p><strong>Primary Key Index</strong>(Clusted Index) 그림의 리프 노드는 Index Key 값 기준으로 정렬되어 있고,
 참조가 아닌 실제 레코드를 저장하는 페이지가 리프노드에 위치해 있다. 페이지 내에서도 Primary Index Key 값 기준으로 레코드가 물리적으로 정렬되어 있다.</p>
 <!-- more -->
 <p><figure class='gatsby-resp-image-figure' style='margin-bottom: 16px;'>
@@ -299,8 +299,8 @@ Post 테이블이 Driving Table이고 Comment 테이블이 Driven Table 인 경�
     </span>
     <figcaption class='gatsby-resp-image-figcaption'>mysql_img_2.png</figcaption>
   </figure></p>
-<p>조인 연산을 수행하기 위해, Post 테이블의 기본키와 연결된 Comment 테이블의 Post<em>id 값으로 조인이 이루어진다. Comment 테이블의 post</em>id에는 이미 인덱스가 생성되어 있기 때문에, Index Range Scan을 사용하여 Post 테이블과 Comment 테이블을 맵핑할 수 있다.</p>
-<p>그 다음 단계에서는 SELECT 결과를 가져오기 위해 Comment 테이블의 레코드를 검색한다. 이 과정에서 Comment 레코드의 탐색을 위해 Random I/O가 발생하게 된다. Comment 테이블의 POST<em>ID</em>IDX 인덱스는 POST<em>ID별로 정렬되어 있어 같은 POST</em>ID를 가지더라도 COMMENT_ID는 멀리 떨어져있는 값을 가질 수 있다.</p>
+<p>조인 연산을 수행하기 위해, Post 테이블의 기본키와 연결된 Comment 테이블의 Post_id 값으로 조인이 이루어진다. Comment 테이블의 post_id에는 이미 인덱스가 생성되어 있기 때문에, Index Range Scan을 사용하여 Post 테이블과 Comment 테이블을 맵핑할 수 있다.</p>
+<p>그 다음 단계에서는 SELECT 결과를 가져오기 위해 Comment 테이블의 레코드를 검색한다. 이 과정에서 Comment 레코드의 탐색을 위해 Random I/O가 발생하게 된다. Comment 테이블의 POST_ID_IDX 인덱스는 POST_ID별로 정렬되어 있어 같은 POST_ID를 가지더라도 COMMENT_ID는 멀리 떨어져있는 값을 가질 수 있다.</p>
 <p>예를 들어 위의 그림에서, Post 테이블에서 id=3인 레코드를 조회하면, Comment 테이블의 post_id와의 조인 결과로 Comment id (100, 200)이 반환된다. 페이지 당 50개 레코드가 저장된다고 가정하면 2개의 Comment 레코드를 가져오기 위해 총 2개의 페이지 읽기 작업이 필요하게 된다.</p>
 <h3>부모테이블의 기본키를 자식 테이블 기본키에 포함하는 경우 (식별관계)</h3>
 <p><figure class='gatsby-resp-image-figure' style='margin-bottom: 16px;'>
@@ -333,9 +333,9 @@ Post 테이블이 Driving Table이고 Comment 테이블이 Driven Table 인 경�
   </figure></p>
 <p>첫번째 방식과 유사하게, 조인이 발생했을 때 Comment 레코드를 읽어오기 위해 페이지 3을 두 번 참조하게 되지만, 이 경우 페이지 3은 이미 캐싱되어 있으므로 두 번째 참조는 추가적인 I/O를 발생시키지 않는다.</p>
 <p>두 방식에서 논리적 페이지 I/O는 2로 동일하지만, 물리적 페이지 I/O(캐시 적용 시)는 각각 2와 1로 다르다. 조인되는 데이터가 많아질수록 두 방식 사이의 물리적 I/O 차이는 더욱 커지게 된다.</p>
-<p>이러한 결과는 두 번째 케이스에서 식별관계를 사용해 기본키를 복합키로 구성했기 때문에 발생한다. POST<em>ID를 기준으로 조인을 수행할 때, 공간적 지역성(Spatial Locality)의 원리가 적용되었다고 볼 수 있다. 특정 Post에 속한 Comment 집합은 같은 논리적 영역에 속하는 인스턴스라고 볼 수 있다. POST</em>ID와 COMMENT<em>ID로 클러스터링하면, 물리적으로도 POST</em>ID에 속한 COMMENT 집합이 유사한 영역에 위치하게 되므로 캐싱 확률이 높아지게 된다.</p>
-<p>실제로 같은 페이지 번호에 저장되어 있는 레코드를 탐색하기 위해서 몇번의 I/O가 발생했는지 확인하기 위해서는 MySQL에서 제공하는 상태 변수 중 Innodb<em>buffer</em>pool_reads 값을 확인하여 물리적 I/O 발생량을 확인할 수 있다. 해당 상태변수는 버퍼풀에서 읽지못하고 디스크에서 직접 읽은 수를 의미하는 변수이다.</p>
-<h4>데이터를 읽기 전에 Innodb<em>buffer</em>pool_reads 값</h4>
+<p>이러한 결과는 두 번째 케이스에서 식별관계를 사용해 기본키를 복합키로 구성했기 때문에 발생한다. POST_ID를 기준으로 조인을 수행할 때, 공간적 지역성(Spatial Locality)의 원리가 적용되었다고 볼 수 있다. 특정 Post에 속한 Comment 집합은 같은 논리적 영역에 속하는 인스턴스라고 볼 수 있다. POST<em>ID와 COMMENT</em>ID로 클러스터링하면, 물리적으로도 POST_ID에 속한 COMMENT 집합이 유사한 영역에 위치하게 되므로 캐싱 확률이 높아지게 된다.</p>
+<p>실제로 같은 페이지 번호에 저장되어 있는 레코드를 탐색하기 위해서 몇번의 I/O가 발생했는지 확인하기 위해서는 MySQL에서 제공하는 상태 변수 중 Innodb_buffer_pool_reads 값을 확인하여 물리적 I/O 발생량을 확인할 수 있다. 해당 상태변수는 버퍼풀에서 읽지못하고 디스크에서 직접 읽은 수를 의미하는 변수이다.</p>
+<h4>데이터를 읽기 전에 Innodb_buffer_pool_reads 값</h4>
 <div class="gatsby-highlight" data-language="shell"><pre class="language-shell"><code class="language-shell">mysql<span class="token operator">></span> SHOW <span class="token environment constant">SESSION</span> STATUS LIKE <span class="token string">'Innodb_buffer_pool_reads%'</span><span class="token punctuation">;</span>
 +--------------------------+-------+
 <span class="token operator">|</span> Variable_name            <span class="token operator">|</span> Value <span class="token operator">|</span>
@@ -345,8 +345,8 @@ Post 테이블이 Driving Table이고 Comment 테이블이 Driven Table 인 경�
 <span class="token number">1</span> row <span class="token keyword">in</span> <span class="token builtin class-name">set</span> <span class="token punctuation">(</span><span class="token number">0.03</span> sec<span class="token punctuation">)</span></code></pre></div>
 <h4>멀리 떨어진 두 개의 Record를 두 건 읽는 경우 (레코드의 페이지가 다른 경우)</h4>
 <div class="gatsby-highlight" data-language="shell"><pre class="language-shell"><code class="language-shell">mysql<span class="token operator">></span> <span class="token keyword">select</span> *
--<span class="token operator">></span> from <span class="token variable"><span class="token variable">`</span>MARKETBOM2_SCHM<span class="token variable">`</span></span>.BIZ_SLIP_TRADE
--<span class="token operator">></span> where BIZ_SLIP_TRADE.TRADE_SLIP_NO <span class="token keyword">in</span> <span class="token punctuation">(</span><span class="token number">2000,3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+-<span class="token operator">></span> from ORDER
+-<span class="token operator">></span> where ORDER.ORDER_NO <span class="token keyword">in</span> <span class="token punctuation">(</span><span class="token number">2000,3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 SHOW <span class="token environment constant">SESSION</span> STATUS LIKE <span class="token string">'Innodb_buffer_pool_reads%'</span><span class="token punctuation">;</span>
 +--------------------------+-------+
@@ -355,7 +355,7 @@ SHOW <span class="token environment constant">SESSION</span> STATUS LIKE <span c
 <span class="token operator">|</span> Innodb_buffer_pool_reads <span class="token operator">|</span> <span class="token number">1654</span>  <span class="token operator">|</span>
 +--------------------------+-------+
 <span class="token number">1</span> row <span class="token keyword">in</span> <span class="token builtin class-name">set</span> <span class="token punctuation">(</span><span class="token number">0.04</span> sec<span class="token punctuation">)</span></code></pre></div>
-<p>PK가 2000, 3000 인 레코드 두 건을 읽었을 떄 Innodb<em>buffer</em>pool_reads 변수가 1652 → 1654 로 증가된 것을 확인할 수 있다. 2번의 Disk I/O가 발생하였다.</p>
+<p>PK가 2000, 3000 인 레코드 두 건을 읽었을 떄 Innodb_buffer_pool_reads 변수가 1652 → 1654 로 증가된 것을 확인할 수 있다. 2번의 Disk I/O가 발생하였다.</p>
 <h4>클러스터링으로 인접한 Record를 두 건 읽는 경우 (레코드 페이지가 같은 경우)</h4>
 <div class="gatsby-highlight" data-language="shell"><pre class="language-shell"><code class="language-shell">mysql<span class="token operator">></span> <span class="token keyword">select</span> *
 -<span class="token operator">></span> from <span class="token variable"><span class="token variable">`</span>MARKETBOM2_SCHM<span class="token variable">`</span></span>.BIZ_SLIP_TRADE
@@ -368,7 +368,7 @@ mysql<span class="token operator">></span> SHOW <span class="token environment c
 <span class="token operator">|</span> Innodb_buffer_pool_reads <span class="token operator">|</span> <span class="token number">1655</span>  <span class="token operator">|</span>
 +--------------------------+-------+
 <span class="token number">1</span> row <span class="token keyword">in</span> <span class="token builtin class-name">set</span> <span class="token punctuation">(</span><span class="token number">0.01</span> sec<span class="token punctuation">)</span></code></pre></div>
-<p>PK가 5000, 5001 인 레코드를 두 건 읽었을 때 Innodb<em>buffer</em>pool_read 변수가 1654 → 1655 로 증가된 것을 확인할 수 있다. 아까와 같이 레코드를 두 건 읽었지만 실제 Disk I/O 발생량은 1번인 것을 확인할 수 있다.</p>
+<p>PK가 5000, 5001 인 레코드를 두 건 읽었을 때 Innodb_buffer_pool_read 변수가 1654 → 1655 로 증가된 것을 확인할 수 있다. 아까와 같이 레코드를 두 건 읽었지만 실제 Disk I/O 발생량은 1번인 것을 확인할 수 있다.</p>
 <h2>정리</h2>
 <p>MySQL의 고성능 Primary Key 설계를 위해서는 클러스터링 인덱스의 특성을 이해하고 테이블의 주 용도 및 액세스 패턴을 정확히 파악해야 한다.</p>
 <p>쓰기 중심의 작업에서는 순차적 ID를 사용하여 성능을 최적화할 수 있다. 이는 쓰기 작업 시 디스크 I/O를 효율적으로 하기 위함이다.</p>
