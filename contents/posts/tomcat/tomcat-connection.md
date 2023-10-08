@@ -30,7 +30,7 @@ Spring/Tomcat 에서는 아래와 같은 Timeout 속성을 제공한다.
 - **server.tomcat.keep-alive-timeout** : 다른 HTTP 요청을 기다리기 전에 연결을 닫을 때까지 얼마 동안 기다릴지를 밀리초 단위로 정한다. 기본값은 connectionTimeout 속성에 설정된 값을 사용한다. -1 값을 사용하면 시간 제한이 없다는 의미다.
 
 Tomcat에서는 별도의 Read/Write Timeout 속성은 제공하지 않고 connection-timeout 속성을 제공한다.
-이 속성은 Tomcat의 Read/Write Timeout 값으로 설정된다. Acceptor 스레드에서 클라이언트 연결이 이루어지면 해당 소켓의 타임아웃 값을 세팅하고 Poller 에게 넘긴다.
+Acceptor 스레드에서 클라이언트 연결이 이루어지면 해당 소켓의 Read/Write Timeout을  connection-timeout으로 설정하고 Poller 에 등록된다.
 
 ```JAVA
 socketWrapper.setReadTimeout(getConnectionTimeout());
@@ -62,20 +62,19 @@ public void run() {
 }
 ```
 
-`processKey(sk, socketWrapper)` 에서 준비된 소켓의 처리가 이루어지고 `timeout(keyCount,hasEvents)` 에서 timeout 관련 처리가 이루어진다.
-이제 Tomcat에서 실제로 timeout 처리가 어떻게 이루어지는지 살펴보자.
+`processKey(sk, socketWrapper)` 에서 준비된 소켓의 처리가 이루어지고 `timeout(keyCount,hasEvents)` 에서 타임아웃 관련 처리가 이루어진다.   
 
-#### 1. poller 스레드에서 무한루프로 timeout() 호출
+
+### timeout(keyCount,hasEvents)
 
 ```JAVA
 protected void timeout(int keyCount, boolean hasEvents);
 ```
-
-- `keyCount`: 현재 선택기에 등록된 키의 수
-- `hasEvents`: 이벤트가 있는지 여부
+timeout 메서드는 현재 selector에 등록된 모든 키의 수인 keyCount와 등록된 채널에서 관심 있는 이벤트가 발생했는 지 여부인 hasEvents 를 인수로 받는다.
 
 
-#### 2. 다음 조건을 검사하여 타임아웃 처리 로직을 실행할지 결정
+#### 조건 검사
+timeout 메서드가 실행되면 첫 번째로 아래의 조건을 검사한다.
 
 ```JAVA
 if (nextExpiration > 0 && (keyCount > 0 || hasEvents) && (now < nextExpiration) && !close) {
@@ -84,20 +83,19 @@ if (nextExpiration > 0 && (keyCount > 0 || hasEvents) && (now < nextExpiration) 
 ```
 
 - `nextExpiration > 0 && (now < nextExpiration)` : 현재 시간이 nextExpiration까지 아직 경과하지 않았다면
-
-- `(keyCount > 0 || hasEvents)` : pooling 큐나 selector에 이벤트가 대기 중이라면
-
+- `(keyCount > 0 || hasEvents)` : polling 큐나 selector에 이벤트가 대기 중이라면
 - `!close` : 서버 소켓이 아직 닫히지 않았다면
 
-> nextExpiration = System.currentTimeMillis() + socketProperties.getTimeoutInterval() 로 계산된다.
+여기서 nextExpiration은 `System.currentTimeMillis() + socketProperties.getTimeoutInterval()`로 계산된다.
 
-위의 세 조건이 모두 참일 경우, 타임아웃 처리를 생략한다. 다시 말해, poller 스레드가 유휴 상태일 때만 타임아웃 처리 로직이 실행된다.   
+조건의 핵심은 계산된 nextExpiration과 현재 시간을 비교해서 타임아웃 로직을 계속할지 결정하는 것이다.
 
-`socketProperties.getTimeoutInterval()`의 기본 값은 1초인데 poller 스레드가 유휴 상태일 때 관리되는 소켓들의 타임아웃을 1초마다 검사하게 된다. 이 로직은 busy wait 방식으로 작동하는데, 이는 짧은 간격으로 지속적으로 실행되어 작업 스케줄링에 따른 오버헤드(예를 들면 스레드 컨텍스트 스위칭)를 줄여 성능 향상을 위한 것으로 추측된다.
+`socketProperties.getTimeoutInterval()`의 기본 값은 1초로, 이 때문에 무한루프 내에서 1초마다 타임아웃을 검사하게 된다.
+이런 방식은 busy wait로 동작하는데, 짧은 간격으로 계속 실행되기 때문에 스레드 컨텍스트 스위칭 같은 작업 스케줄링 오버헤드를 줄여 성능을 향상시키려는 의도로 보인다.
 
 
-#### 3.  selector.keys()를 사용해 모든 채널의 타임아웃을 검사한다.
-
+#### 연결되어 있는 모든 소켓 확인
+Selector에 등록된 모든 SelectionKey를 가져와 연결되어 있는 모든 소켓에 대해서 타임아웃 검사를 한다.
 ```JAVA
 for (SelectionKey key : selector.keys()) {
     keycount++;
@@ -106,8 +104,6 @@ for (SelectionKey key : selector.keys()) {
     // 생략...
 }
 ```
-
-#### 3-1 소켓의 마지막 read/write 이후 시간을 확인하여 타임아웃을 검사한다.
 ```JAVA
 // 소켓이 현재 read 작업에 관심이 있다면 readTimeout 판단
 if (socketWrapper.interestOpsHas(SelectionKey.OP_READ)) {
@@ -118,7 +114,6 @@ if (socketWrapper.interestOpsHas(SelectionKey.OP_READ)) {
     }
 }
 ```
-
 ```JAVA
 // 소켓이 현재 write 작업에 관심이 있다면 writeTimeout 판단
 if (!readTimeout && socketWrapper.interestOpsHas(SelectionKey.OP_WRITE)) {
@@ -129,8 +124,16 @@ if (!readTimeout && socketWrapper.interestOpsHas(SelectionKey.OP_WRITE)) {
     }
 }
 ```
+Selector로 관리하는 각 연결의 정보는 SelectionKey에 담겨있다. 이 SelectionKey에서 socketWrapper를 가져와 연결 상태를 파악하고 조절한다.
 
-#### 3-1 타임아웃 발생 시, processSocket을 사용해 SocketEvent.ERROR로 처리한다.
+socketWrapper로 해당 소켓이 마지막으로 언제 데이터를 읽었는지 (getLastRead)와 썼는지 (getLastWrite) 확인한다.
+현재 시간과 마지막으로 데이터를 읽거나 쓴 시간 사이의 차이를 delta로 계산한다.
+이 delta가 설정된 timeout을 넘으면, 그 연결은 타임아웃으로 간주하고 관련 작업을 수행한다.
+
+
+#### 타임아웃 처리
+위에서 설정된 writeTimeout, readTimeout 변수를 확인하여 타임아웃이라고 판단되면 cancelledKey 메서드를 호출한다.
+cancelledKey 메서드는 할당되어 있는 자원을 해제하고 소켓 연결을 종료한다.
 ```JAVA
  if (readTimeout && socketWrapper.readOperation != null) {
     if (!socketWrapper.readOperation.process()) {
@@ -148,13 +151,14 @@ if (!readTimeout && socketWrapper.interestOpsHas(SelectionKey.OP_WRITE)) {
 - `socketWrapper.readOperation.process()` 및 `socketWrapper.writeOperation.process()`      
 socketWrapper의 readOperation, writeOperation 는 비동기 처리일 때 사용된다.
 timeout이 발생했을 때 등록된 비동기 작업이 있으면 process() 를 통해 해당 작업을 처리한다.      
-만약 비동기 작업 처리에 실패한다면`(!socketWrapper.readOperation.process() == true) 인 경우` cancelledKey() 을 호출하여 socket을 close 한다.
+만약 비동기 작업 처리에 실패한다면`(!socketWrapper.readOperation.process() == true) 인 경우` cancelledKey 을 호출하여 socket을 close 한다.
 
 - `processSocket(socketWrapper, SocketEvent.ERROR, true)`   
-동기 HTTP 요청 처리을 처리할 때 선택되는 로직이다. processSocket() 메서드에 SocketEvent.ERROR라는 Enum 타입을 전달하면 해당 메서드 내에서 SocketEvent의 값에 따라 처리 로직이 분기된다. 
+동기 HTTP 요청 처리을 처리할 때 선택되는 로직이다. processSocket 메서드에 SocketEvent.ERROR라는 Enum 타입을 전달하면 해당 메서드 내에서 SocketEvent의 값에 따라 처리 로직이 분기된다. 
 processSocket은 Worker threadPool에서 스레드 하나를 할당받아 소켓 이벤트를 처리하게 된다.
 즉, 워커 스레드를 하나 할당받아 socket close 작업을 진행한다.   
-만약 Worker Pool에서 스레드 할당에 실패하면 `(!processSocket(socketWrapper, SocketEvent.ERROR, true) == true)` 현재의 Main Thread(Poller Thread)에서 cancelledKey()를 호출하여 socket을 close 한다.
+만약 Worker Pool에서 스레드 할당에 실패하면 `(!processSocket(socketWrapper, SocketEvent.ERROR, true) == true)` 현재의 Main Thread(Poller Thread)에서 cancelledKey를 호출하여 socket을 close 한다.
+
 
 
 ## Persistent Connection
@@ -169,7 +173,9 @@ Http11Processor의 `service()` 메서드는 소켓을 통해 들어오는 HTTP �
 
 ```JAVA
 public SocketState service(SocketWrapperBase<?> socketWrapper) throws IOException;
+```
 
+```java
 enum SocketState {
     OPEN, CLOSED, LONG, ASYNC_END, SENDFILE, UPGRADING, UPGRADED, ASYNC_IO, SUSPENDED
 }
