@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Java NIO 파헤치기 - Buffer"
+title: "Java NIO - Buffer"
 tags:
   - Java
 lang: ko-KR
@@ -22,9 +22,11 @@ update: 2023-10-03
 커널은 필요한 데이터를 찾아 사용자 공간의 지정된 버퍼로 전송한다.
 커널은 데이터를 캐시하거나 미리 가져오려고 시도하기 때문에 프로세스가 요청하는 데이터는 이미 커널 공간에 있을 수 있다.
 
-운영체제의 버퍼 단위 I/O와 기존 java.io의 스트림 기반 I/O 모델 간에 불일치가 있다.
+기존 java.io 라이브러리와 NIO 간의 가장 중요한 차이점은 데이터를 패키지하고 전송하는 방법과 관련이 있다.
 운영 체제는 데이터를 큰 덩어리(버퍼)로 이동시키려고 하는 반면, 스트림 기반 I/O 클래스는 작은 단위(단일 바이트나 텍스트의 줄)로 데이터를 처리하려고 한다.
-Java의 NIO는 이러한 불일치를 해결하기 위해 도입되었다.
+Java의 NIO는 이러한 불일치를 해결하기 위해 도입되었다. 
+NIO는 한 번에 여러 바이트의 데이터 블록을 처리하고 운영 체제의 native I/O 를 더욱 활용하여 기존 I/O의 한계를 극복한다.
+
 
 ## Buffer
 Buffer 객체는 고정된 양의 데이터를 관리하는 컨테이너이다. 버퍼는 채워지고 비워진다.
@@ -201,7 +203,7 @@ direct buffer는 네이티브 메모리 영역에 직접 할당되어 데이터�
 direct buffer는 ByteBuffer 클래스의 allocateDirect() 정적 팩토리 메서드로 생성할 수 있다.
 
 
-## View Buffer
+### View Buffer
 뷰 버퍼는 원본 버퍼와 데이터를 공유하지만, 자체적인 속성 (예: position, limit, capacity 등)을 가진다.
 이는 뷰 버퍼를 통해 데이터를 읽거나 쓸 때 원본 버퍼의 데이터가 변경되며, 반대의 경우도 마찬가지이다.
 위에서 나온 duplicate()와 wrap() 메서드로 만든 버퍼도 뷰 버퍼의 일종으로 볼 수 있다.
@@ -209,7 +211,7 @@ direct buffer는 ByteBuffer 클래스의 allocateDirect() 정적 팩토리 메�
 뷰 버퍼의 주요 사용 사례는 ByteBuffer의 바이트 데이터를 다른 원시 타입으로 해석할 필요가 있을 때이다.
 이 때, ByteBuffer의 asIntBuffer(), asCharBuffer() 등의 팩토리 메서드를 통해 원하는 원시 타입의 뷰 버퍼를 생성할 수 있다.
 
-```shell
+```JAVA
 public abstract class ByteBuffer extends Buffer implements Comparable {
   
   public abstract CharBuffer asCharBuffer();
@@ -219,6 +221,29 @@ public abstract class ByteBuffer extends Buffer implements Comparable {
   public abstract FloatBuffer asFloatBuffer();
   public abstract DoubleBuffer asDoubleBuffer();
 }    
-
 ```
 ![char형 view buffer](buffer/img_5.png)
+
+
+## 정리
+**버퍼 기반 I/O**
+- 운영체제의 모든 I/O 작업은 버퍼를 통해 이루어진다.
+- 프로세스는 데이터를 버퍼에 쓰거나 버퍼에서 데이터를 읽음으로써 I/O를 수행한다.
+- 사용자 공간에서는 하드웨어에 직접 접근할 수 없으며, 모든 I/O는 커널 공간을 통해 이루어진다.   
+
+**Java NIO**
+- 기존 java.io 라이브러리와 NIO의 주요 차이는 데이터 처리 방식에 있다.
+- 운영 체제는 데이터를 큰 덩어리(버퍼)로 처리하는 반면, 스트림 기반 I/O는 작은 단위로 데이터를 처리한다.
+- NIO는 이러한 불일치를 해결하며, 한 번에 여러 바이트의 데이터 블록을 처리한다.   
+
+**Buffer**
+- Buffer는 고정된 양의 데이터를 관리하는 컨테이너로, 데이터 전송의 출발지나 대상이 된다.
+- Buffer는 채워지고 비워지며, 주요 속성으로는 mark, position, limit, capacity가 있다.
+- Buffer는 데이터를 읽고 쓸 때 상대적 연산과 절대적 연산을 제공한다.   
+
+**ByteBuffer**
+- ByteBuffer는 특별하며, 바이트 중심의 I/O 작업의 대상이 될 수 있다.
+- ByteBuffer는 direct buffer와 non-direct buffer 두 종류가 있으며, direct buffer는 네이티브 메모리 영역에 직접 할당된다.
+- 뷰 버퍼는 원본 버퍼와 데이터를 공유하지만, 자체적인 속성을 가진다.
+
+
