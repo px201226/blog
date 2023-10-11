@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of SOOLAB]]></title><description><![CDATA[RDBMS, NoSQL, 분산 처리에 관심이 많은 백엔드 엔지니어입니다.]]></description><link>https://px201226.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 11 Oct 2023 05:03:20 GMT</lastBuildDate><item><title><![CDATA[스프링으로 알아보는 IoC 컨테이너의 원리와 이해]]></title><description><![CDATA[What is Light-Weight Container…]]></description><link>https://px201226.github.io/spring-core-container/</link><guid isPermaLink="false">https://px201226.github.io/spring-core-container/</guid><pubDate>Wed, 11 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;What is Light-Weight Container?&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of SOOLAB]]></title><description><![CDATA[RDBMS, NoSQL, 분산 처리에 관심이 많은 백엔드 엔지니어입니다.]]></description><link>https://px201226.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 11 Oct 2023 05:24:16 GMT</lastBuildDate><item><title><![CDATA[스프링으로 알아보는 IoC 컨테이너의 원리와 이해]]></title><description><![CDATA[What is Light-Weight Container…]]></description><link>https://px201226.github.io/spring-core-container/</link><guid isPermaLink="false">https://px201226.github.io/spring-core-container/</guid><pubDate>Wed, 11 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;What is Light-Weight Container?&lt;/h2&gt;
 &lt;p&gt;애플리케이션 코드가 실행되는 프레임워크를 의미한다. 애플리케이션 객체(대부분 비즈니스 객체)는 컨테이너 내부에서 실행되며 컨테이너에 의해 관리된다고 한다. 다음은 경량 컨테이너가 가지는 특징들이다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;비침투성 (Non-invasiveness): 이는 애플리케이션 코드에 특별한 의존성을 부과하지 않는 컨테이너를 의미한다. 예를 들어, 기존의 코드를 수정하지 않고도 컨테이너 내에서 실행할 수 있어야 한다. 이는 인프라가 애플리케이션 코드에 불필요한 의존성을 부과하지 않아야 함을 의미한다.&lt;/li&gt;
@@ -495,7 +495,7 @@ Read Timeout 내에 클라이언트로부터 데이터가 도착하면 요청을
 &lt;p&gt;Tomcat에서는 연결들을 타임아웃의 관점에서 어떻게 관리하는지, 특히 Read/Write Timeout과 Persistent Connection에 초점을 맞춰 살펴보았다.
 이 과정에서 busy wait 방식을 사용하여 지속적으로 타임아웃을 검사하는 것을 확인했다.
 더불어, Tomcat에서는 &lt;code class=&quot;language-text&quot;&gt;read-timeout&lt;/code&gt; 또는 &lt;code class=&quot;language-text&quot;&gt;write-timeout&lt;/code&gt; 없이 &lt;code class=&quot;language-text&quot;&gt;connection-timeout&lt;/code&gt; 이라는 명칭으로 타임아웃 값을 설정하는데,
-이는 Persistent Connection의 경우 &lt;code class=&quot;language-text&quot;&gt;keep-alive-timeout&lt;/code&gt;으로 변경되기 때문에 &lt;code class=&quot;language-text&quot;&gt;connection-timeout&lt;/code&gt; 명칭을 쓰지 않았나 싶다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Java NIO 파헤치기 - Buffer]]></title><description><![CDATA[버퍼 I/O 운영체제의 I/O는 모두 버퍼를 통해 이루어진다. 프로세스는 버퍼에서 데이터를 채우는 (쓰기) 또는 버퍼에 데이터를 비우는 (읽기) 작업을 운영 체제에 요청함으로써 I/O…]]></description><link>https://px201226.github.io/java-nio-buffer/</link><guid isPermaLink="false">https://px201226.github.io/java-nio-buffer/</guid><pubDate>Tue, 03 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;버퍼 I/O&lt;/h2&gt;
+이는 Persistent Connection의 경우 &lt;code class=&quot;language-text&quot;&gt;keep-alive-timeout&lt;/code&gt;으로 변경되기 때문에 &lt;code class=&quot;language-text&quot;&gt;connection-timeout&lt;/code&gt; 명칭을 쓰지 않았나 싶다.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Java NIO - Buffer]]></title><description><![CDATA[버퍼 I/O 운영체제의 I/O는 모두 버퍼를 통해 이루어진다. 프로세스는 버퍼에서 데이터를 채우는 (쓰기) 또는 버퍼에 데이터를 비우는 (읽기) 작업을 운영 체제에 요청함으로써 I/O…]]></description><link>https://px201226.github.io/java-nio-buffer/</link><guid isPermaLink="false">https://px201226.github.io/java-nio-buffer/</guid><pubDate>Tue, 03 Oct 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;버퍼 I/O&lt;/h2&gt;
 &lt;p&gt;운영체제의 I/O는 모두 버퍼를 통해 이루어진다. 프로세스는 버퍼에서 데이터를 채우는 (쓰기) 또는 버퍼에 데이터를 비우는 (읽기) 작업을 운영 체제에 요청함으로써 I/O를 수행한다.
 모든 데이터는 이 메커니즘을 통해 프로세스 내부로 이동하거나 나간다.
 &lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
@@ -515,9 +515,10 @@ Read Timeout 내에 클라이언트로부터 데이터가 도착하면 요청을
 &lt;p&gt;프로세스가 I/O 작업을 요청하면 시스템 호출을 수행하여 커널로 제어권을 전달한다.
 커널은 필요한 데이터를 찾아 사용자 공간의 지정된 버퍼로 전송한다.
 커널은 데이터를 캐시하거나 미리 가져오려고 시도하기 때문에 프로세스가 요청하는 데이터는 이미 커널 공간에 있을 수 있다.&lt;/p&gt;
-&lt;p&gt;운영체제의 버퍼 단위 I/O와 기존 java.io의 스트림 기반 I/O 모델 간에 불일치가 있다.
+&lt;p&gt;기존 java.io 라이브러리와 NIO 간의 가장 중요한 차이점은 데이터를 패키지하고 전송하는 방법과 관련이 있다.
 운영 체제는 데이터를 큰 덩어리(버퍼)로 이동시키려고 하는 반면, 스트림 기반 I/O 클래스는 작은 단위(단일 바이트나 텍스트의 줄)로 데이터를 처리하려고 한다.
-Java의 NIO는 이러한 불일치를 해결하기 위해 도입되었다.&lt;/p&gt;
+Java의 NIO는 이러한 불일치를 해결하기 위해 도입되었다.
+NIO는 한 번에 여러 바이트의 데이터 블록을 처리하고 운영 체제의 native I/O 를 더욱 활용하여 기존 I/O의 한계를 극복한다.&lt;/p&gt;
 &lt;h2&gt;Buffer&lt;/h2&gt;
 &lt;p&gt;Buffer 객체는 고정된 양의 데이터를 관리하는 컨테이너이다. 버퍼는 채워지고 비워진다.
 버퍼는 채널과 밀접하게 작동한다. 채널은 I/O 전송이 이루어지는 포털이며, 버퍼는 그 데이터 전송의 출발지나 대상이다. 나가는 전송의 경우, 전송하고 싶은 데이터는 버퍼에 넣어져 채널로 전달된다.
@@ -734,20 +735,20 @@ direct buffer는 네이티브 메모리 영역에 직접 할당되어 데이터�
 &lt;/ol&gt;
 &lt;p&gt;대신 일반적으로 direct buffer 생성 비용은 non-direct buffer 생성 비용보다 클 수 있다. direct 버퍼는 운영체제 코드를 통해 할당되기 때문이다.
 direct buffer는 ByteBuffer 클래스의 allocateDirect() 정적 팩토리 메서드로 생성할 수 있다.&lt;/p&gt;
-&lt;h2&gt;View Buffer&lt;/h2&gt;
+&lt;h3&gt;View Buffer&lt;/h3&gt;
 &lt;p&gt;뷰 버퍼는 원본 버퍼와 데이터를 공유하지만, 자체적인 속성 (예: position, limit, capacity 등)을 가진다.
 이는 뷰 버퍼를 통해 데이터를 읽거나 쓸 때 원본 버퍼의 데이터가 변경되며, 반대의 경우도 마찬가지이다.
 위에서 나온 duplicate()와 wrap() 메서드로 만든 버퍼도 뷰 버퍼의 일종으로 볼 수 있다.&lt;/p&gt;
 &lt;p&gt;뷰 버퍼의 주요 사용 사례는 ByteBuffer의 바이트 데이터를 다른 원시 타입으로 해석할 필요가 있을 때이다.
 이 때, ByteBuffer의 asIntBuffer(), asCharBuffer() 등의 팩토리 메서드를 통해 원하는 원시 타입의 뷰 버퍼를 생성할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;shell&quot;&gt;&lt;pre class=&quot;language-shell&quot;&gt;&lt;code class=&quot;language-shell&quot;&gt;public abstract class ByteBuffer extends Buffer implements Comparable &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;java&quot;&gt;&lt;pre class=&quot;language-java&quot;&gt;&lt;code class=&quot;language-java&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ByteBuffer&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Buffer&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;Comparable&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   
-  public abstract CharBuffer asCharBuffer&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  public abstract ShortBuffer asShortBuffer&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  public abstract IntBuffer asIntBuffer&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  public abstract LongBuffer asLongBuffer&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  public abstract FloatBuffer asFloatBuffer&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
-  public abstract DoubleBuffer asDoubleBuffer&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;CharBuffer&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;asCharBuffer&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;ShortBuffer&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;asShortBuffer&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;IntBuffer&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;asIntBuffer&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;LongBuffer&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;asLongBuffer&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;FloatBuffer&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;asFloatBuffer&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;token keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;DoubleBuffer&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;asDoubleBuffer&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;    &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
     &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
@@ -760,7 +761,37 @@ direct buffer는 ByteBuffer 클래스의 allocateDirect() 정적 팩토리 메�
   &lt;/a&gt;
     &lt;/span&gt;
     &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;char형 view buffer&lt;/figcaption&gt;
-  &lt;/figure&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Java의 Socket Option 정리]]></title><description><![CDATA[Socket Option 소켓 옵션은 자바의 Socket 클래스가 사용하는 네트워크 소켓이 데이터를 어떻게 보내고 받을 것인지를 결정한다. 자바에서는 클라이언트 측 소켓에 대해 9가지 옵션이 존재한다. TCP_NODELAY SO_BINDADDR SO…]]></description><link>https://px201226.github.io/socket_option/</link><guid isPermaLink="false">https://px201226.github.io/socket_option/</guid><pubDate>Fri, 29 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Socket Option&lt;/h2&gt;
+  &lt;/figure&gt;&lt;/p&gt;
+&lt;h2&gt;정리&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;버퍼 기반 I/O&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;운영체제의 모든 I/O 작업은 버퍼를 통해 이루어진다.&lt;/li&gt;
+&lt;li&gt;프로세스는 데이터를 버퍼에 쓰거나 버퍼에서 데이터를 읽음으로써 I/O를 수행한다.&lt;/li&gt;
+&lt;li&gt;사용자 공간에서는 하드웨어에 직접 접근할 수 없으며, 모든 I/O는 커널 공간을 통해 이루어진다.   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Java NIO&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;기존 java.io 라이브러리와 NIO의 주요 차이는 데이터 처리 방식에 있다.&lt;/li&gt;
+&lt;li&gt;운영 체제는 데이터를 큰 덩어리(버퍼)로 처리하는 반면, 스트림 기반 I/O는 작은 단위로 데이터를 처리한다.&lt;/li&gt;
+&lt;li&gt;NIO는 이러한 불일치를 해결하며, 한 번에 여러 바이트의 데이터 블록을 처리한다.   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Buffer&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Buffer는 고정된 양의 데이터를 관리하는 컨테이너로, 데이터 전송의 출발지나 대상이 된다.&lt;/li&gt;
+&lt;li&gt;Buffer는 채워지고 비워지며, 주요 속성으로는 mark, position, limit, capacity가 있다.&lt;/li&gt;
+&lt;li&gt;Buffer는 데이터를 읽고 쓸 때 상대적 연산과 절대적 연산을 제공한다.   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;ByteBuffer&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ByteBuffer는 특별하며, 바이트 중심의 I/O 작업의 대상이 될 수 있다.&lt;/li&gt;
+&lt;li&gt;ByteBuffer는 direct buffer와 non-direct buffer 두 종류가 있으며, direct buffer는 네이티브 메모리 영역에 직접 할당된다.&lt;/li&gt;
+&lt;li&gt;뷰 버퍼는 원본 버퍼와 데이터를 공유하지만, 자체적인 속성을 가진다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;참조&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Java Nio - OReilly (2002)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developer.ibm.com/tutorials/j-nio/&quot;&gt;https://developer.ibm.com/tutorials/j-nio/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Java의 Socket Option 정리]]></title><description><![CDATA[Socket Option 소켓 옵션은 자바의 Socket 클래스가 사용하는 네트워크 소켓이 데이터를 어떻게 보내고 받을 것인지를 결정한다. 자바에서는 클라이언트 측 소켓에 대해 9가지 옵션이 존재한다. TCP_NODELAY SO_BINDADDR SO…]]></description><link>https://px201226.github.io/socket_option/</link><guid isPermaLink="false">https://px201226.github.io/socket_option/</guid><pubDate>Fri, 29 Sep 2023 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Socket Option&lt;/h2&gt;
 &lt;p&gt;소켓 옵션은 자바의 Socket 클래스가 사용하는 네트워크 소켓이 데이터를 어떻게 보내고 받을 것인지를 결정한다. 자바에서는 클라이언트 측 소켓에 대해 9가지 옵션이 존재한다.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;TCP_NODELAY&lt;/li&gt;
