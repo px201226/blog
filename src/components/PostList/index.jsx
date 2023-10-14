@@ -77,6 +77,7 @@ const PostList = ({ postList }) => {
         return (
           <>
             <PostWrapper>
+              <TagList tagList={tags} />
               <Title size="bg">
                 <Link to={slug}>{title}</Link>
               </Title>
@@ -86,7 +87,7 @@ const PostList = ({ postList }) => {
               ) : (
                 <Excerpt>{excerpt}</Excerpt>
               )}
-              <TagList tagList={tags} />
+
             </PostWrapper>
 
             {postCount - 1 !== i && postList.length - 1 !== i && (
