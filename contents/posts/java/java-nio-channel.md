@@ -1,8 +1,20 @@
+---
+layout: post
+title: "Java NIO - Channel"
+tags:
+  - Java
+lang: ko-KR
+date: 2023-10-14
+update: 2023-10-14
+series: "Java NIO"
+---
+
 ## Channel
 
 Channel은 파일이나 소켓과 같은 엔티티 간에 데이터를 효율적으로 전송하는 통로이다.
 채널은 일반적으로 운영체제의 파일 디스크립터나 핸들러와 일대일 관계를 가진다.
-채널은 Java의 플랫폼 독립성을 유지하면서도 운영 체제의 네이티브 I/O 기능에 대한 추상화를 제공한다.   
+채널은 Java의 플랫폼 독립성을 유지하면서도 운영 체제의 네이티브 I/O 기능에 대한 추상화를 제공한다.
+
 아래 그림은 Channel 클래스의 상속관계를 나타낸다.
 
 ![Channel 상속 관계](./channel/img.png)
@@ -33,20 +45,20 @@ FileChannel은 RandomAccessFile, FileInputStream, FileOutputStream 와 같은 �
 
 ```JAVA
 // 파일 채널 생성
-RandomAccessFile raf=new RandomAccessFile("somefile","r");
-		FileChannel fc=raf.getChannel();
+RandomAccessFile raf = new RandomAccessFile("somefile","r");
+FileChannel fc = raf.getChannel();
 ```
 
 나머지 소켓 채널들은 팩토리 메서드를 통해 생성할 수 있다.
 
 ```JAVA
-SocketChannel sc=SocketChannel.open();
-		sc.connect(new InetSocketAddress("somehost",someport));
+SocketChannel sc = SocketChannel.open();
+sc.connect(new InetSocketAddress("somehost",someport));
 
-		ServerSocketChannel ssc=ServerSocketChannel.open();
-		ssc.socket().bind(new InetSocketAddress(somelocalport));
+ServerSocketChannel ssc = ServerSocketChannel.open();
+ssc.socket().bind(new InetSocketAddress(somelocalport));
 
-		DatagramChannel dc=DatagramChannel.open();
+DatagramChannel dc = DatagramChannel.open();
 ```
 
 ### 채널 사용
@@ -114,7 +126,8 @@ Scatter/Gather 는 운영 체제에서 I/O 작업을 최적화하는 방법 중 
 - Gather: 여러 버퍼에서 데이터를 모아서 쓰는 것을 의미한다.
 
 Scatter/Gather를 사용하면 여러 버퍼의 주소 목록을 한 번의 시스템 호출로 전달할 수 있다.
-이렇게 하면 사용자 프로세스가 여러 시스템 호출을 하는 것을 피할 수 있다.
+이렇게 하면 사용자 프로세스가 여러 시스템 호출을 하는 것을 피할 수 있다.   
+
 ![3개의 버퍼에서 scattering으로 read](./channel/img_1.png)
 
 아래는 Scatter/Gather I/O를 지원하는 인터페이스이다. read, write 메서드에 ByteBuffer 배열을 인자로 받는 것을 확인할 수 있다.
@@ -145,7 +158,7 @@ public interface GatheringByteChannel extends WritableByteChannel {
 ```JAVA
 ByteBuffer header = ByteBuffer.allocateDirect (10);
 ByteBuffer body = ByteBuffer.allocateDirect (80);
-ByteBuffer [] buffers = { header, body };
+ByteBuffer[] buffers = { header, body };
 int bytesRead = channel.read (buffers);
 ```
 채널에 38byte가 준비되어 있다면 header에 10byte, body에 28byte가 저장된다.
@@ -292,3 +305,45 @@ ServerSocketChannel은 Selector와 함께 사용했을 때, 새 연결이 도착
 
 
 ### SocketChannel
+모든 SocketChannel 객체는 피어 객체인 Socket과 함께 생성된다.
+SocketChannel의 static 메서드인 open() 메서드는 새로운 SocketChannel 객체를 생성한다.
+새 SocketChannel에서 socket()을 호출하면 해당 피어 Socket 객체가 반환딘다.
+해당 Socket에서 getChannel()을 호출하면 원래 SocketChannel이 반환된다.
+
+SocketChannel의 연결은 open() 이나 connect() 메서드를 통해 이루어진다.
+아래는 SocketChannel 연결의 예이다.
+```JAVA
+SocketChannel socketChannel = SocketChannel.open(new InetSocketAddress("localhost", "8080"));
+```
+```JAVA
+SocketChannel socketChannel = SocketChannel.open();
+socketChannel.connect(new InetSocketAddress("localhost", "8080"));
+```
+
+nonblocking 모드에서 connect()를 호출해서 반환값이 true이면 연결이 즉시 성립되었다는 것이고, 연결이 즉시 성립되지 않으면 connect()는 false를 반환된다.
+
+만약 연결이 바로 성립되지 않는 경우 (서버에 연결하는 데 시간이 걸리는 경우), 연결은 백그라운드에서 계속 진행된다.
+isConnectPending() 메서드는 연결이 백그라운드에서 진행 중인지 확인할 수 있다. 
+예를 들어, 소켓 채널을 nonblocking 모드로 설정하고 연결을 시도했을 때 연결이 즉시 성립되지 않으면 isConnectPending() 메서드는 true를 반환하고, 연결이 성립되가니 연결이 시작되지 않았을 경우 false를 반환한다.
+
+finishConnect() 메서드는 nonblocking 모드에서 연결을 시도한 후 연결 상태를 확인하는 데 사용된다.
+연결이 성립되었을 경우 true를 반환하고, 그렇지 않을 경우 false를 반환하거나 연결 과정이 시작되지 않았을 때(connect 호출 전) 예외를 발생시킨다.
+
+```java
+InetSocketAddress addr = new InetSocketAddress(host, port);
+SocketChannel sc = SocketChannel.open();
+sc.configureBlocking (false);
+sc.connect (addr);
+while (!sc.finishConnect()) {
+   doSomethingElse();
+}
+doSomethingWithChannel(sc);
+sc.close();
+```
+
+
+## 참조
+- Java NIO(Ron Hitchens)
+
+
+
