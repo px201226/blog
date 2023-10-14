@@ -190,6 +190,43 @@ FileChannel은 항상 블로킹 모드로 동작하며, 논블로킹 모드로 �
 그러나 파일이 NFS와 같은 원격 파일 시스템에 있으면 이러한 동기화를 보장할 수 없다. 다른 파일 시스템에서도 구현에 따라 동일한 문제가 발생할 수 있다.
 JVM은 운영 체제나 파일 시스템이 지키지 않는 약속을 할 수 없다. 시스템 실패에도 데이터 무결성을 유지해야 하는 애플리케이션의 경우, 사용 중인 운영 체제나 파일 시스템이 그러한 측면에서 신뢰할 수 있는지 확인해야 한다.
 
+아래는 FileChannel로 파일을 Copy 하는 예제 코드이다.
+
+```JAVA
+public class FileCopyExample {
+	public static void main(String[] args) {
+		String sourceFilePath = "원본파일경로/원본파일.txt";
+		String destinationFilePath = "대상파일경로/대상파일.txt";
+
+		try {
+			FileInputStream sourceStream = new FileInputStream(sourceFilePath);
+			FileOutputStream destinationStream = new FileOutputStream(destinationFilePath);
+
+			FileChannel sourceChannel = sourceStream.getChannel();
+			FileChannel destinationChannel = destinationStream.getChannel();
+
+			ByteBuffer buffer = ByteBuffer.allocate(1024);
+			int bytesRead;
+
+			while ((bytesRead = sourceChannel.read(buffer)) != -1) {
+				buffer.flip(); // 버퍼를 읽기 모드로 전환
+				destinationChannel.write(buffer); // 버퍼의 내용을 대상 파일로 복사
+				buffer.clear(); // 버퍼를 초기화하여 다시 쓰기 모드로 전환
+			}
+
+			sourceStream.close();
+			destinationStream.close();
+			sourceChannel.close();
+			destinationChannel.close();
+
+			System.out.println("파일이 복사되었습니다.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
+```
+
 
 ## Memory-Mapped Files
 FileChannel 클래스의 map() 메서드를 사용하면, 파일과 특별한 유형의 ByteBuffer 사이에 가상 메모리 매핑을 설정할 수 있다. 이렇게 하면 디스크 파일을 기반으로 한 가상 메모리 매핑이 생성되고, 해당 가상 메모리 공간 주위에 MappedByteBuffer 객체가 감싸진다.   

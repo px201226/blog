@@ -338,10 +338,35 @@ CoyoteAdapter는 Connector와 Container(Engine) 사에에 다리 역할을 한�
 Engine은 요청을 처리하여 반환값을 반환한다.
 
 
-### 요청 플로우
+### 요청 처리
+다음으로 Tomcat에서 요청을 어떻게 수락하고 서블릿까지 전달되어 처리되는 과정을 살펴보자.
 
-### 1. [Acceptor Thread] serverSock.accept()로 연결을 수락한다.
+먼저, Tomcat이 run 하게 되면 poller와 acceptor 스레드를 하나씩 생성하고 시작된다.
+```JAVA
+// poller 스레드 생성 및 시작
+poller = new Poller();
+Thread pollerThread = new Thread(poller, getName() + "-Poller");
+pollerThread.setPriority(threadPriority);
+pollerThread.setDaemon(true);
+pollerThread.start();
+```
 
+```java
+protected void startAcceptorThread() {
+    acceptor = new Acceptor<>(this);
+    String threadName = getName() + "-Acceptor";
+    acceptor.setThreadName(threadName);
+    Thread t = new Thread(acceptor, threadName);
+    t.setPriority(getAcceptorThreadPriority());
+    t.setDaemon(getDaemon());
+    t.start();
+}
+```
+위에서 살펴봤듯이 poller와 acceptor 스레드가 실행되면 이벤트 큐를 처리하거나 소켓 연결을 수락하는데, 이 작업을 처리하기 위해 무한루프로 구현된다.
+
+
+Acceptor 스레드가 실행되면 ServerSocketChannel의 accept() 메서드를 통해 클라이언트 연결을 수락할 때까지 대기한다.
+accept()는 blocking 모드로 동작된다. 이는 클라이언트 연결을 위한 스레드를 따로 만들었기 때문에 불필요하게 non-blocking 모드로 폴링할 필요가 없기 때문인 것으로 보인다.
 ```JAVA
 public class NioEndpoint extends AbstractJsseEndpoint<NioChannel, SocketChannel> {
 
@@ -366,8 +391,8 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel, SocketChannel>
 }
 ```
 
-### 2. [Acceptor Thread] 생성된 소켓을 PollerEvent로 Poller 이벤트 큐에 등록
-
+만약, 위에서 요청이 accept() 되어 소켓 연결이 이루어지면 반환된 SocketChannel을 이벤트 큐에 등록한다.
+이 작업은 Acceptor 스레드에서 NioEndpoint은 setSocketOptions() 메서드를 통해 이루어진다.
 ```JAVA
 public class NioEndpoint extends AbstractJsseEndpoint<NioChannel, SocketChannel> {
 
@@ -398,8 +423,12 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel, SocketChannel>
 
 }        
 ```
+SocketChannel을 NioSocketWrapper로 랩핑 후 poller.register()로 Poller 이벤트 등록이 끝나면, Acceptor 스레드는 다음 요청을 수락하기 위해 처음의 accept()로 다시 돌아가 대기하게 된다.
+이로써, Acceptor의 역할은 끝나고 다음 작업은 Poller 스레드에서 이루어진다.
 
-### 3. [Poller Thread] 이벤트 큐를 돌면서 SocketChannel.register()로 Selector에 소켓 채널을 등록
+Poller 스레드도 Acceptor 스레드와 마찬가지로 무한루프를 돌면서 이벤트 큐에 등록된 이벤트가 있는지 폴링 방식으로 검사한다.
+클라이언트 연결이 이루어진다면 다음으로 클라이언트에서 데이터를 읽어야 할 차례이다. 클라이언트 요청값을 읽어 들이기 위해서 Selector에 OP_READ를 등록한다.
+`sc.register(getSelector(), SelectionKey.OP_READ, socketWrapper)`
 
 ```JAVA
 public class Poller implements Runnable {
@@ -431,7 +460,9 @@ public class Poller implements Runnable {
 }
 ```
 
-### 4. [Poller Thread] 무한 루프를 돌면서, selector.select() 로 이벤트 수신, processKey()로 이벤트 처리
+
+그 후, Poller 스레드는 selector.select() 로 채널에서 이벤트 수신를 수신한다.
+반환된 SelectionKey의 attatchment에서 NioSocketWrapper을 꺼내와서 processKey()로 소켓을 처리하게 된다.
 
 ```JAVA
 public class Poller implements Runnable {
@@ -484,7 +515,8 @@ public class Poller implements Runnable {
 }
 ```
 
-### 5. [Poller Thread] SelectionKey에 따라 SocketProcessor를 구성하고, Worker 스레드에 요청 제출
+processKey() 에서는 소켓 처리에 필요한 객체(SocketProcessorBase)를 생성하고, 스레드풀 Exector를 통해 소켓 처리를 위임한다.
+Executor 스레드는 Worker Pool 스레드를 의미한다. 
 
 ```JAVA
 public abstract class AbstractEndpoint<S, U> {
@@ -513,20 +545,19 @@ public abstract class AbstractEndpoint<S, U> {
 }
 ```
 
-### 4. [WorkerThread] CoyoteAdapter로 요청 위임 및 컨테이너로 요청 전달
-
+소켓 처리를 넘겨 받은 Worker에서는 reqeust, response 객체를 세팅하고, CoyoteAdapter를 통해 서블릿으로 소켓처리를 위임한다. 
 ```JAVA
 // SocketProcessor.java
 getHandler().process(socketWrapper,SocketEvent.OPEN_READ);
 
 // AbstractProcessorLight.java
-		state=service(socketWrapper); // 요청 위임
+state=service(socketWrapper); // 요청 위임
 
 // Http11Processor.java
-		getAdapter().service(request,response); // CoyoteAdapter로 요청 위임  
+getAdapter().service(request,response); // CoyoteAdapter로 요청 위임  
 
 // CoyoteAdapter.java
-		connector.getService().getContainer().getPipeline().getFirst().invoke(request,response); // 컨테이너로 요청 전달
+connector.getService().getContainer().getPipeline().getFirst().invoke(request,response); // 컨테이너로 요청 전달
 ```
 
 ## 참조
