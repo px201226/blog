@@ -221,6 +221,7 @@ const StyledMarkdown = styled.div`
   & a {
     padding: 1.6px 0;
     color: #477cc2;
+    text-decoration-line: none
   }
 
   & a:hover {
