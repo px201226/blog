@@ -78,7 +78,7 @@ const PostList = ({ postList }) => {
           <>
             <PostWrapper>
               <TagList tagList={tags} />
-              <Title size="bg">
+              <Title size="md">
                 <Link to={slug}>{title}</Link>
               </Title>
               <Date>{date}</Date>
