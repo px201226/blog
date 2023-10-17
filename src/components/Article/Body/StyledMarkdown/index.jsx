@@ -2,9 +2,10 @@ import styled from "styled-components"
 
 const StyledMarkdown = styled.div`
   & {
-    font-size: 16.7px;
+    letter-spacing: .01rem;
+    line-height: 1.8rem;
+    font-size: 19px;
     color: ${props => props.theme.colors.text};
-    line-height: 1.73;
     overflow: hidden;
   }
 
@@ -220,7 +221,7 @@ const StyledMarkdown = styled.div`
 
   & a {
     padding: 1.6px 0;
-    color: #477cc2;
+    color: ${props => props.theme.colors.hrefLink};
     text-decoration-line: none
   }
 

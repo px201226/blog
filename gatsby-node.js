@@ -5,6 +5,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
 
   const postTemplate = require.resolve(`./src/templates/Post.jsx`)
+  const postPageTemplate = require.resolve(`./src/templates/PostPagination.jsx`)
   const seriesTemplate = require.resolve(`./src/templates/Series.jsx`)
 
   const result = await graphql(`
@@ -80,6 +81,22 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         },
       })
     })
+  }
+
+  // Create Post List
+  const postPerPage = 10
+  const totalPage = Math.ceil(posts.length / postPerPage);
+
+  for (let index = 1; index <= totalPage; index++) {
+    createPage({
+      path: `/page/${index}`,
+      component: postPageTemplate,
+      context: {
+        skip: postPerPage * (index - 1),
+        totalPage,
+        currentPage: index,
+      },
+    });
   }
 }
 

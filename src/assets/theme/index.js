@@ -13,7 +13,7 @@ export const light = {
   name: "light",
   colors: {
     bodyBackground: "#ffffff",
-    text: GRAY9,
+    text: "#555",
     secondaryText: GRAY7,
     tertiaryText: GRAY6,
     mutedText: GRAY5,
@@ -44,6 +44,7 @@ export const light = {
     textFieldBorder: GRAY4,
     textFieldActivatedBorder: GRAY5,
     tableBackground: GRAY1,
+    hrefLink: "#0052cc"
   },
 }
 
@@ -82,5 +83,6 @@ export const dark = {
     textFieldBorder: GRAY7,
     textFieldActivatedBorder: GRAY6,
     tableBackground: "#292e33",
+    hrefLink: "#0052cc"
   },
 }
