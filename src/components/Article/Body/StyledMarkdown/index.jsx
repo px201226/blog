@@ -61,7 +61,7 @@ const StyledMarkdown = styled.div`
   & h4 {
     margin-top: 70px;
     margin-bottom: 15px;
-    font-size: 17.6px;
+    font-size: 20px;
   }
 
   & h5 {
