@@ -28,7 +28,7 @@ const HeaderWrapper = styled.header`
   transition: top 0.5s, opacity 0.5s;
   z-index: 999;
 
-  @media (max-width: 768px) {
+  @media (max-width: 840px) {
     padding: 16px 0;
   }
 `
@@ -38,7 +38,7 @@ const Inner = styled.div`
   justify-content: space-between;
   margin: 0 64px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 840px) {
     margin: 0 15px;
   }
 `
