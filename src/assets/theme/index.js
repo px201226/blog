@@ -1,6 +1,6 @@
 const GRAY9 = "#191919"
 const GRAY8 = "#2D2D2D"
-const GRAY7 = "#404040"
+const GRAY7 = "#555"
 const GRAY6 = "#868e96"
 const GRAY5 = "#adb5bd"
 const GRAY4 = "#ced4da"
@@ -13,7 +13,8 @@ export const light = {
   name: "light",
   colors: {
     bodyBackground: "#ffffff",
-    text: "#555",
+    boldText: GRAY9,
+    text: GRAY7,
     secondaryText: GRAY7,
     tertiaryText: GRAY6,
     mutedText: GRAY5,
@@ -52,7 +53,8 @@ export const dark = {
   name: "dark",
   colors: {
     bodyBackground: GRAY9,
-    text: GRAY0,
+    boldText: GRAY0,
+    text: GRAY3,
     secondaryText: GRAY4,
     tertiaryText: GRAY5,
     mutedText: GRAY6,
@@ -83,6 +85,6 @@ export const dark = {
     textFieldBorder: GRAY7,
     textFieldActivatedBorder: GRAY6,
     tableBackground: "#292e33",
-    hrefLink: "#0052cc"
+    hrefLink: "#95b5e7"
   },
 }
