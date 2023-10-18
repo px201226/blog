@@ -11,7 +11,7 @@ import Divider from "components/Divider"
 import { description, siteUrl } from "../../blog-config"
 
 const Header = styled.div`
-  @media (max-width: 768px) {
+  @media (max-width: 860px) {
     padding: 0px 15px;
   }
 `

@@ -17,7 +17,7 @@ const BioWrapper = styled.div`
   display: flex;
   align-items: center;
 
-  @media (max-width: 840px) {
+  @media (max-width: 860px) {
     padding: 0 15px;
   }
 `

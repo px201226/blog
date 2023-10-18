@@ -25,7 +25,7 @@ const NotFound = styled.div`
     font-size: 30.4px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 860px) {
     height: 300px;
   }
 `
