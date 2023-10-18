@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { ThemeProvider } from "styled-components"
-
+import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux"
 import { setLight, setDark } from "reducers/theme"
 
@@ -11,7 +11,9 @@ import GlobalStyles from "components/GlobalStyles"
 import Header from "./Header"
 import Body from "./Body"
 import Footer from "./Footer"
-
+const PageWrapper = styled.div`
+  min-height: 100vh;
+`;
 const Layout = ({ children }) => {
   const dispatch = useDispatch()
   const { theme } = useSelector(state => state.theme)
@@ -41,9 +43,11 @@ const Layout = ({ children }) => {
   return (
     <ThemeProvider theme={theme === "light" ? light : dark}>
       <GlobalStyles />
+      <PageWrapper>
       <Header toggleTheme={toggleTheme} />
       <Body>{children}</Body>
       <Footer />
+      </PageWrapper>
     </ThemeProvider>
   )
 }
