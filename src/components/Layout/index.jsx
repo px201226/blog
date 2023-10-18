@@ -13,6 +13,8 @@ import Body from "./Body"
 import Footer from "./Footer"
 const PageWrapper = styled.div`
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 `;
 const Layout = ({ children }) => {
   const dispatch = useDispatch()
