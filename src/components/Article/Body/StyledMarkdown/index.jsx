@@ -4,7 +4,7 @@ const StyledMarkdown = styled.div`
   & {
     letter-spacing: .02rem;
     line-height: 1.9rem;
-    font-size: 19px;
+   
     color: ${props => props.theme.colors.text};
     overflow: hidden;
   }
