@@ -16,7 +16,8 @@ const ArticleButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 48px;
-
+  font-size: 19px;
+  
   @media (max-width: 860px) {
     margin-bottom: 80px;
     padding: 0 12.8px;
