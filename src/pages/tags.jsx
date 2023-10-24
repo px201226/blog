@@ -19,7 +19,7 @@ import { title, description, siteUrl } from "../../blog-config"
 const TagListWrapper = styled.div`
   margin-top: 20px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 860px) {
     padding: 0 15px;
   }
 `

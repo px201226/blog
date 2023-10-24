@@ -17,7 +17,7 @@ const ArticleButtonContainer = styled.div`
   justify-content: space-between;
   margin-bottom: 48px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 860px) {
     margin-bottom: 80px;
     padding: 0 12.8px;
     flex-direction: column;
@@ -87,7 +87,7 @@ const ArticleButtonWrapper = styled.div`
     left: ${props => (props.right ? 2 : -2)}px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 860px) {
     max-width: inherit;
     flex-basis: inherit;
   }
@@ -106,7 +106,7 @@ const ArticleButtonTitle = styled.div`
 `
 
 const CommentWrapper = styled.div`
-  @media (max-width: 768px) {
+  @media (max-width: 860px) {
     padding: 0 15px;
   }
 `

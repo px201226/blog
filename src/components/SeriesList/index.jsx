@@ -9,7 +9,7 @@ import Divider from "components/Divider"
 
 const SeriesListWrapper = styled.div`
   margin-bottom: 60px;
-  @media (max-width: 768px) {
+  @media (max-width: 860px) {
     padding: 0 10px;
   }
 `
@@ -19,7 +19,7 @@ const SeriesWrapper = styled.div`
   top: 0;
   transition: all 0.5s;
 
-  @media (max-width: 768px) {
+  @media (max-width: 860px) {
     padding: 0 5px;
   }
 `

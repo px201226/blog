@@ -64,7 +64,7 @@ const StyledMarkdown = styled.div`
     margin-top: 70px;
     margin-bottom: 15px;
     font-size: 20px;
-    color: ${props => props.theme.colors.text};
+    color: ${props => props.theme.colors.boldText};
   }
 
   & h5 {
