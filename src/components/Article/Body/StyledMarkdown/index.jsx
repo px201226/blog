@@ -3,7 +3,7 @@ import styled from "styled-components"
 const StyledMarkdown = styled.div`
   & {
     letter-spacing: .02rem;
-    line-height: 1.9rem;
+    line-height: 1.8rem;
    
     color: ${props => props.theme.colors.text};
     overflow: hidden;
