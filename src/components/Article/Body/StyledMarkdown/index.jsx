@@ -3,7 +3,7 @@ import styled from "styled-components"
 const StyledMarkdown = styled.div`
   & {
     letter-spacing: .02rem;
-    line-height: 1.8rem;
+    line-height: 1.8;
    
     color: ${props => props.theme.colors.text};
     overflow: hidden;
@@ -61,8 +61,8 @@ const StyledMarkdown = styled.div`
   }
 
   & h4 {
-    margin-top: 70px;
-    margin-bottom: 15px;
+    margin-top: 50px;
+    margin-bottom: 5px;
     font-size: 20px;
     color: ${props => props.theme.colors.boldText};
   }
@@ -176,7 +176,7 @@ const StyledMarkdown = styled.div`
   }
 
   & li {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
 
   & li p {
