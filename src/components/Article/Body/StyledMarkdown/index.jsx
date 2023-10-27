@@ -48,14 +48,14 @@ const StyledMarkdown = styled.div`
 
   & h2 {
     margin-top: 100px;
-    margin-bottom: 24px;
+    margin-bottom: 10px;
     font-size: 28px;
     color: ${props => props.theme.colors.boldText};
   }
 
   & h3 {
     margin-top: 70px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-size: 22.4px;
     color: ${props => props.theme.colors.boldText};
   }
@@ -199,7 +199,7 @@ const StyledMarkdown = styled.div`
 
   & code[class*="language-"],
   & pre[class*="language-"] {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   & img {
