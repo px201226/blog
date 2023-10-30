@@ -4,7 +4,7 @@ const StyledMarkdown = styled.div`
   & {
     letter-spacing: .02rem;
     line-height: 1.8;
-   
+
     color: ${props => props.theme.colors.text};
     overflow: hidden;
   }
@@ -20,7 +20,7 @@ const StyledMarkdown = styled.div`
   & > ul,
   & > ol,
   & table,
-  & blockquote,
+  & blockquote ,
   & pre,
   & img,
   & .katex-display {
@@ -85,6 +85,8 @@ const StyledMarkdown = styled.div`
 
   & blockquote {
     padding: 18px 24px;
+    margin-bottom: 20px;
+    font-size: 17px;
     border-left: 4px solid ${props => props.theme.colors.blockQuoteBorder};
     background-color: ${props => props.theme.colors.blockQuoteBackground};
 
@@ -200,6 +202,7 @@ const StyledMarkdown = styled.div`
   & code[class*="language-"],
   & pre[class*="language-"] {
     font-size: 15px;
+    margin-bottom: 24px;
   }
 
   & img {
@@ -231,6 +234,30 @@ const StyledMarkdown = styled.div`
   & a:hover {
     background-color: ${props => props.theme.colors.text};
     color: ${props => props.theme.colors.hoveredLinkText};
+  }
+
+  & .anchor-header.after:hover {
+    background-color: transparent;
+  }
+
+  & sup {
+    vertical-align: super;
+    font-size: smaller;
+  }
+
+  & .footnotes  {
+    font-size: 15px /* 원하는 폰트 사이즈 */;
+    margin: 100px 0px; /* p 태그의 상하단 여백을 제거해 'enter' 효과를 무시 */
+    white-space: nowrap;
+  }
+
+  & .footnotes p {
+    margin: 0;
+    display: inline;
+  }
+  
+  & .footnotes li {
+    margin: 0;
   }
 
   @media (max-width: 480px) {
