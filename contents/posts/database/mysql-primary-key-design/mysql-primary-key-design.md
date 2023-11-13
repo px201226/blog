@@ -33,7 +33,7 @@ Index Key 값은 정렬되어 있지만 Index Key 값에 맵핑되는 Primary Ke
 참조가 아닌 실제 레코드를 저장하는 페이지가 리프노드에 위치해 있다. 페이지 내에서도 Primary Index Key 값 기준으로 레코드가 물리적으로 정렬되어 있다.
 
 <!-- more -->
-![img.png](./img/index-tree.png)
+![img.png](./index-tree.png)
 
 Clusted Index는 구조적인 이유로 순차적인 Key 값을 넣을 때, 오버헤드가 가정 적고 가장 빠르다. 단순히 Index 트리 오른쪽 맨끝에 새로운 레코드를 삽입해주기만 하면 된다.    
 반면에 비순차적인 Key 값이 들어오게 되면 상황이 복잡해진다. Key 값이 기존 데이터 중간에 삽입될 수 있으므로 트리 구조를 변경사항에 맞게 갱신해야 한다.   
@@ -82,12 +82,12 @@ Auto increament 와 UID 를 이용한 기본키 유형은 대리키로 일반화
 
 ### 부모테이블의 기본키를 자식 테이블의 기본키로 쓰지 않고, 외래키로 사용하는 경우 (비식별관계)
 
-![mysql_img_1.png](./img/mysql_img_1.png)
+![mysql_img_1.png](./mysql_img_1.png)
 
 Post, Comment 테이블 둘 다 Auto Increament 기본키를 사용하고, Comment 테이블에 post\_id FK 를 두어 Post와 연관관계를 맺는 방식이다.
 Post 테이블이 Driving Table이고 Comment 테이블이 Driven Table 인 경우 두 테이블을 조인하게 되면 아래 그림와 같은 방식으로 데이터를 탐색하게 된다.
 
-![mysql_img_2.png](./img/mysql_img_2.png)
+![mysql_img_2.png](./mysql_img_2.png)
 
 조인 연산을 수행하기 위해, Post 테이블의 기본키와 연결된 Comment 테이블의 Post\_id 값으로 조인이 이루어진다. Comment 테이블의 post_id에는 이미 인덱스가 생성되어 있기 때문에, Index Range Scan을 사용하여 Post 테이블과 Comment 테이블을 맵핑할 수 있다.
 
@@ -98,11 +98,11 @@ Post 테이블이 Driving Table이고 Comment 테이블이 Driven Table 인 경�
 
 ### 부모테이블의 기본키를 자식 테이블 기본키에 포함하는 경우 (식별관계)
 
-![mysql_img_3.png](./img/mysql_img_3.png)
+![mysql_img_3.png](./mysql_img_3.png)
 
 두번째 예에서는 Comment가 POST의 ID를 자신의 기본키에 포함시킨 Composite Key로 PK를 구성한 예이다. 마찬가지로 아래는 Post 테이블이 Driving Table이고 Comment 테이블이 Driven Table 인 경우 두 테이블을 조인할 때, 데이터 탐색 방식이다.
 
-![mysql_img_4.png](./img/mysql_img_4.png)
+![mysql_img_4.png](./mysql_img_4.png)
 
 첫번째 방식과 유사하게, 조인이 발생했을 때 Comment 레코드를 읽어오기 위해 페이지 3을 두 번 참조하게 되지만, 이 경우 페이지 3은 이미 캐싱되어 있으므로 두 번째 참조는 추가적인 I/O를 발생시키지 않는다.
 
