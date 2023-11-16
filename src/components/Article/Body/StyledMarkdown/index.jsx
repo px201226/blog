@@ -88,7 +88,7 @@ const StyledMarkdown = styled.div`
     margin-bottom: 20px;
     font-size: 17px;
     border-left: 4px solid ${props => props.theme.colors.blockQuoteBorder};
-    background-color: ${props => props.theme.colors.blockQuoteBackground};
+    //background-color: ${props => props.theme.colors.blockQuoteBackground};
 
     & *:last-child {
       margin-bottom: 0;
@@ -109,12 +109,14 @@ const StyledMarkdown = styled.div`
 
   & th {
     border-bottom: 2px solid ${props => props.theme.colors.border};
+    font-size: 90%;
     font-weight: 700;
   }
 
   & td {
     border-top: 1px solid ${props => props.theme.colors.border};
     border-bottom: 1px solid ${props => props.theme.colors.border};
+    font-size: 85%;
   }
 
   & td,

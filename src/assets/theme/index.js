@@ -41,7 +41,7 @@ export const light = {
     scrollTrack: GRAY0,
     scrollHandle: GRAY1,
     blockQuoteBorder: GRAY4,
-    blockQuoteBackground: GRAY1,
+    blockQuoteBackground: GRAY0,
     textFieldBorder: GRAY4,
     textFieldActivatedBorder: GRAY5,
     tableBackground: GRAY1,
