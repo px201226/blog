@@ -308,7 +308,7 @@ CPU는 레지스터로도 데이터를 읽어들일 수 있다. CPU가 메모리
 <li>정적 synchronized 메소드: static synchronized 메소드는 클래스 객체(Class object)를 잠근다.</li>
 <li>클래스 객체의 잠금: 클래스 객체를 잠그는 경우, getClass()는 런타임 클래스에 대한 잠금, MyClass.class에 대한 잠금은 컴파일 시점에 결정된다.</li>
 <li>Inner 클래스의 동기화: Inner 클래스에서의 동기화는 outer 클래스와 독립적이다.</li>
-<li>인터페이스의 메소드 선언과 synchronized: synchronized는 메소드 시그니처가 아니므로 인터페이스에 선언할 수 없ㄷ</li>
+<li>인터페이스의 메소드 선언과 synchronized: synchronized는 메소드 시그니처가 아니므로 인터페이스에 선언할 수 없다.</li>
 <li>비동기화 메소드: 비동기화 메소드는 잠금의 상태를 고려하지 않으며, 동기화 메소드가 실행되는 동안에도 진행될 수 있다.</li>
 <li>재진입 가능한 잠금: 이미 잠금을 보유하고 있는 스레드가 동일한 잠금에 대한 synchronized 잠금을 만나면 계속해서 진행할 수 있다.</li>
 </ul>
